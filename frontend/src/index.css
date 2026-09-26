@@ -1,0 +1,93 @@
+/* Global styles — clinical theme */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #dc2626;
+  --orange: #ea580c;
+  --yellow: #ca8a04;
+  --green: #16a34a;
+  --blue: #2563eb;
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #334155;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #475569;
+  --radius: 12px;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* RTL support for Urdu/Arabic */
+[dir="rtl"] {
+  font-family: 'Noto Nastaliq Urdu', 'Scheherazade New', serif;
+  font-size: 1.1em;
+}
+
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.severity-RED    { background: var(--red);    color: white; }
+.severity-ORANGE { background: var(--orange);  color: white; }
+.severity-YELLOW { background: var(--yellow);  color: white; }
+.severity-GREEN  { background: var(--green);   color: white; }
+.severity-BLUE   { background: var(--blue);    color: white; }
+.severity-UNKNOWN{ background: #6b7280;        color: white; }
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: opacity 0.15s, transform 0.1s;
+}
+button:hover { opacity: 0.85; }
+button:active { transform: scale(0.97); }
+
+.btn-primary   { background: #3b82f6; color: white; }
+.btn-success   { background: var(--green); color: white; }
+.btn-danger    { background: var(--red); color: white; }
+.btn-warning   { background: var(--orange); color: white; }
+.btn-secondary { background: var(--surface2); color: var(--text); }
+
+input, select, textarea {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 10px 14px;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+}
+input:focus, textarea:focus { border-color: #3b82f6; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.page { max-width: 900px; margin: 0 auto; padding: 24px; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }

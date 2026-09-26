@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=${APP_ENV:-production}
+      - SECRET_KEY=${SECRET_KEY:-secret-key-ai-nurse-2026}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-}
+      - OPENAI_LLM_MODEL=${OPENAI_LLM_MODEL:-gemini-2.5-flash}
+      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
+      - STT_PROVIDER=${STT_PROVIDER:-mock}
+      - TRANSLATION_PROVIDER=${TRANSLATION_PROVIDER:-mock}
+      - EMBEDDING_PROVIDER=${EMBEDDING_PROVIDER:-mock}
+      - DATABASE_URL=sqlite+aiosqlite:///./ai_nurse.db
+    volumes:
+      - backend_data:/app/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  backend_data:

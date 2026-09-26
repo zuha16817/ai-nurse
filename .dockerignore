@@ -1,0 +1,24 @@
+# Root Docker ignore rules
+.env
+.env.*
+*.env
+!.env.example
+
+# Debug and test scripts
+test_*.py
+scratch_*.py
+list_*.py
+verify_*.py
+
+# Python & Node build artifacts
+__pycache__/
+*.pyc
+.pytest_cache/
+node_modules/
+dist/
+build/
+.venv/
+
+# Version control
+.git
+.gitignore

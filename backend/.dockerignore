@@ -1,0 +1,31 @@
+# Exclude secrets and env files from Docker build context
+.env
+.env.*
+*.env
+!.env.example
+
+# Exclude debug/test scripts
+test_*.py
+scratch_*.py
+list_*.py
+verify_*.py
+
+# Exclude python cache & virtualenvs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Exclude git metadata
+.git
+.gitignore
+.dockerignore
+
+# Exclude databases and logs
+*.db
+*.sqlite
+*.log

@@ -1,0 +1,388 @@
+# AI Nurse Synthetic Triage Rules v1.0.0
+# =========================================
+# These are SYNTHETIC rules created for this assignment.
+# They do NOT reproduce licensed Manchester Triage System content.
+# The engine is designed so licensed rules can be loaded here later.
+#
+# Rule structure:
+#   Each rule has: id, description, colour, priority, conditions
+#   Conditions are evaluated in order; ALL must be true for the rule to fire.
+#   Colour determines triage level: RED(1) > ORANGE(2) > YELLOW(3) > GREEN(4) > BLUE(5)
+#   Higher-priority rules are evaluated first. First match wins.
+
+version: "1.0.0"
+description: "Synthetic generic triage rules for AI Nurse assignment"
+created_by: "Assignment Author"
+protocol: "AI_NURSE_SYNTHETIC_PROTOTYPE"
+
+# Institutional target assessment times (spec §3). Kept here — external to the
+# application code — so a deployment can configure its own policy without touching
+# the engine. Any colour omitted here falls back to the spec's reference values.
+target_minutes:
+  RED: 0
+  ORANGE: 10
+  YELLOW: 60
+  GREEN: 120
+  BLUE: 240
+
+rules:
+  # ─── RED (Level 1 — Immediate: 0 minutes) ───────────────────────────────────
+
+  - id: "RULE-RED-001"
+    description: "Cardiac arrest or no pulse detected"
+    colour: RED
+    priority: 100
+    conditions:
+      - field: "consciousness.avpu"
+        operator: "equals"
+        value: "Unresponsive"
+      # Only fires on a MEASURED pulse of 0. An unrecorded pulse is unknown, not absent.
+      - field: "vital_signs.pulse"
+        operator: "equals"
+        value: 0
+
+  - id: "RULE-RED-002"
+    description: "Respiratory arrest or severe breathing compromise"
+    colour: RED
+    priority: 99
+    conditions:
+      - field: "breathing.difficulty"
+        operator: "equals"
+        value: "PRESENT"
+      - field: "vital_signs.spo2"
+        operator: "less_than"
+        value: 85
+
+  - id: "RULE-RED-003"
+    description: "Unresponsive patient (AVPU = Unresponsive)"
+    colour: RED
+    priority: 98
+    conditions:
+      - field: "consciousness.avpu"
+        operator: "equals"
+        value: "Unresponsive"
+
+  - id: "RULE-RED-004"
+    description: "Uncontrolled major haemorrhage"
+    colour: RED
+    priority: 97
+    conditions:
+      - field: "bleeding.present"
+        operator: "equals"
+        value: "PRESENT"
+      - field: "bleeding.severity"
+        operator: "equals"
+        value: "uncontrolled"
+
+  - id: "RULE-RED-005"
+    description: "Severe anaphylaxis with airway threat"
+    colour: RED
+    priority: 96
+    conditions:
+      - field: "symptoms.anaphylaxis"
+        operator: "equals"
+        value: "PRESENT"
+      - field: "breathing.difficulty"
+        operator: "equals"
+        value: "PRESENT"
+
+  - id: "RULE-RED-006"
+    description: "Acute stroke symptoms (FAST positive)"
+    colour: RED
+    priority: 95
+    conditions:
+      - field: "symptoms.stroke_symptoms"
+        operator: "equals"
+        value: "PRESENT"
+
+  - id: "RULE-RED-007"
+    description: "Severe altered consciousness (AVPU = Pain or GCS < 9)"
+    colour: RED
+    priority: 94
+    conditions:
+      - field: "consciousness.avpu"
+        operator: "equals"
+        value: "Pain"
+
+  # ─── ORANGE (Level 2 — Very Urgent: 10 minutes) ─────────────────────────────
+
+  - id: "RULE-ORANGE-001"
+    description: "Chest pain with breathing difficulty — possible ACS"
+    colour: ORANGE
+    priority: 90
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "chest_discomfort"
+      - field: "breathing.difficulty"
+        operator: "equals"
+        value: "PRESENT"
+
+  - id: "RULE-ORANGE-002"
+    description: "Chest pain with pain severity >= 8"
+    colour: ORANGE
+    priority: 89
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "chest_discomfort"
+      - field: "pain.severity"
+        operator: "greater_than_or_equal"
+        value: 8
+
+  - id: "RULE-ORANGE-003"
+    description: "Altered consciousness (confused, responds only to voice)"
+    colour: ORANGE
+    priority: 88
+    conditions:
+      - field: "consciousness.avpu"
+        operator: "in"
+        value: ["Voice", "Pain"]
+
+  - id: "RULE-ORANGE-004"
+    description: "SpO2 < 92% — significant hypoxia"
+    colour: ORANGE
+    priority: 87
+    conditions:
+      - field: "vital_signs.spo2"
+        operator: "less_than"
+        value: 92
+
+  - id: "RULE-ORANGE-005"
+    description: "Stroke symptoms — facial droop, arm weakness, speech difficulty"
+    colour: ORANGE
+    priority: 86
+    conditions:
+      - field: "symptoms.stroke_symptoms"
+        operator: "equals"
+        value: "PRESENT"
+
+  - id: "RULE-ORANGE-006"
+    description: "Severe allergic reaction without airway compromise"
+    colour: ORANGE
+    priority: 85
+    conditions:
+      - field: "symptoms.anaphylaxis"
+        operator: "equals"
+        value: "PRESENT"
+
+  - id: "RULE-ORANGE-007"
+    description: "Severe haemorrhage (controlled but significant)"
+    colour: ORANGE
+    priority: 84
+    conditions:
+      - field: "bleeding.present"
+        operator: "equals"
+        value: "PRESENT"
+      - field: "bleeding.severity"
+        operator: "equals"
+        value: "severe"
+
+  - id: "RULE-ORANGE-008"
+    description: "Very high fever (>= 40°C)"
+    colour: ORANGE
+    priority: 83
+    conditions:
+      - field: "vital_signs.temperature"
+        operator: "greater_than_or_equal"
+        value: 40.0
+
+  - id: "RULE-ORANGE-009"
+    description: "Tachycardia with chest discomfort — HR > 130 bpm"
+    colour: ORANGE
+    priority: 82
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "chest_discomfort"
+      - field: "vital_signs.pulse"
+        operator: "greater_than"
+        value: 130
+
+  - id: "RULE-ORANGE-010"
+    description: "Vaginal bleeding in a known pregnancy — obstetric emergency risk"
+    colour: ORANGE
+    priority: 91
+    conditions:
+      - field: "pregnancy_status"
+        operator: "equals"
+        value: "PREGNANT"
+      - field: "bleeding.present"
+        operator: "equals"
+        value: "PRESENT"
+
+  - id: "RULE-ORANGE-011"
+    description: "Infant under 1 year with fever — significant sepsis risk at this age"
+    colour: ORANGE
+    priority: 92
+    conditions:
+      - field: "patient_age"
+        operator: "less_than"
+        value: 1
+      - field: "vital_signs.temperature"
+        operator: "greater_than_or_equal"
+        value: 38.0
+
+  # ─── YELLOW (Level 3 — Urgent: 60 minutes) ──────────────────────────────────
+
+  - id: "RULE-YELLOW-001"
+    description: "Moderate chest pain without high-acuity features"
+    colour: YELLOW
+    priority: 70
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "chest_discomfort"
+      - field: "pain.severity"
+        operator: "between"
+        value: [4, 7]
+
+  - id: "RULE-YELLOW-002"
+    description: "Significant abdominal pain"
+    colour: YELLOW
+    priority: 69
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "abdominal_complaint"
+      - field: "pain.severity"
+        operator: "greater_than_or_equal"
+        value: 6
+
+  - id: "RULE-YELLOW-003"
+    description: "Moderate breathing difficulty without hypoxia"
+    colour: YELLOW
+    priority: 68
+    conditions:
+      - field: "breathing.difficulty"
+        operator: "equals"
+        value: "PRESENT"
+
+  - id: "RULE-YELLOW-004"
+    description: "Fever >= 38.5°C with systemic symptoms"
+    colour: YELLOW
+    priority: 67
+    conditions:
+      - field: "vital_signs.temperature"
+        operator: "greater_than_or_equal"
+        value: 38.5
+
+  - id: "RULE-YELLOW-005"
+    description: "Severe headache with sudden onset"
+    colour: YELLOW
+    priority: 66
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "headache"
+      - field: "pain.severity"
+        operator: "greater_than_or_equal"
+        value: 7
+
+  - id: "RULE-YELLOW-006"
+    description: "Significant injury requiring assessment"
+    colour: YELLOW
+    priority: 65
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "injury"
+      - field: "pain.severity"
+        operator: "greater_than_or_equal"
+        value: 5
+
+  - id: "RULE-YELLOW-007"
+    description: "Moderate bleeding"
+    colour: YELLOW
+    priority: 64
+    conditions:
+      - field: "bleeding.present"
+        operator: "equals"
+        value: "PRESENT"
+      - field: "bleeding.severity"
+        operator: "equals"
+        value: "moderate"
+
+  - id: "RULE-YELLOW-008"
+    description: "Acute / rapid-onset symptom (reported in minutes) with at least moderate pain"
+    colour: YELLOW
+    priority: 63
+    conditions:
+      - field: "onset"
+        operator: "contains"
+        value: "minute"
+      - field: "pain.severity"
+        operator: "greater_than_or_equal"
+        value: 4
+
+  # ─── GREEN (Level 4 — Standard: 120 minutes) ─────────────────────────────────
+
+  - id: "RULE-GREEN-001"
+    description: "Mild pain not requiring urgent assessment"
+    colour: GREEN
+    priority: 50
+    conditions:
+      - field: "pain.present"
+        operator: "equals"
+        value: "PRESENT"
+      - field: "pain.severity"
+        operator: "between"
+        value: [1, 4]
+
+  - id: "RULE-GREEN-002"
+    description: "Minor injury, ambulatory"
+    colour: GREEN
+    priority: 49
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "injury"
+      - field: "pain.severity"
+        operator: "less_than"
+        value: 5
+
+  - id: "RULE-GREEN-003"
+    description: "Low-grade fever without significant systemic symptoms"
+    colour: GREEN
+    priority: 48
+    conditions:
+      - field: "vital_signs.temperature"
+        operator: "between"
+        value: [37.5, 38.4]
+
+  - id: "RULE-GREEN-004"
+    description: "General weakness or fatigue without acute features"
+    colour: GREEN
+    priority: 47
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "general_weakness"
+
+  # ─── BLUE (Level 5 — Non-Urgent: 240 minutes) ────────────────────────────────
+
+  - id: "RULE-BLUE-001"
+    description: "Chronic condition routine review, no acute features"
+    colour: BLUE
+    priority: 30
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "chronic_review"
+
+  - id: "RULE-BLUE-002"
+    description: "Administrative or documentation visit"
+    colour: BLUE
+    priority: 29
+    conditions:
+      - field: "chief_complaint.category"
+        operator: "equals"
+        value: "administrative"
+
+  # ─── DEFAULT fallback ─────────────────────────────────────────────────────────
+
+  - id: "RULE-DEFAULT"
+    description: "Insufficient information to determine urgency — defaults to YELLOW for safety"
+    colour: YELLOW
+    priority: 1
+    conditions: []    # always matches as fallback

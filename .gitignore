@@ -1,0 +1,29 @@
+# Environment variables and secrets
+.env
+.env.*
+*.env
+!.env.example
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Python cache & environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Node.js dependencies & builds
+node_modules/
+dist/
+build/
+
+# Operating System files
+.DS_Store
+Thumbs.db
