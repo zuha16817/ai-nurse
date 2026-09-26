@@ -27,7 +27,7 @@ class ISpeechToTextService(ABC):
         """
         Transcribe audio bytes to text.
 
-        `expected_language` is a hint only — real STT (Whisper) auto-detects and
+        `expected_language` is a hint only - real STT (Whisper) auto-detects and
         ignores it. It exists so the offline Mock, which cannot actually process
         audio, can still respect the language the patient selected in the UI
         instead of always returning the same hardcoded language.
@@ -74,7 +74,7 @@ class OpenAIWhisperSTT(ISpeechToTextService):
             duration = getattr(response, "duration", 0.0) or 0.0
             text = response.text.strip()
 
-            # Never log transcript content to ordinary application logs (spec §31) —
+            # Never log transcript content to ordinary application logs (spec §31) - 
             # the text itself belongs only in the access-restricted audit trail.
             logger.info("STT: lang=%s, duration=%.1fs, length=%d chars", detected_lang, duration, len(text))
 
@@ -85,12 +85,12 @@ class OpenAIWhisperSTT(ISpeechToTextService):
             )
 
         except openai.APITimeoutError:
-            logger.error("STT timeout — escalating to text fallback")
+            logger.error("STT timeout - escalating to text fallback")
             raise
         except openai.APIError as e:
             logger.error("STT API error: %s", e)
             if "insufficient_quota" in str(e) or "credit_balance_exhausted" in str(e):
-                logger.warning("Whisper STT quota exhausted — falling back to MockSTT")
+                logger.warning("Whisper STT quota exhausted - falling back to MockSTT")
                 mock = MockSTT()
                 return await mock.transcribe(audio_bytes, filename, expected_language)
             raise
@@ -103,7 +103,7 @@ class MockSTT(ISpeechToTextService):
     """
     Mock STT for testing without API keys.
 
-    Cannot actually process the recorded audio — it always returns one of a fixed
+    Cannot actually process the recorded audio - it always returns one of a fixed
     set of canned phrases. To avoid the confusing appearance of "detecting" a
     language you never spoke, it uses the patient's selected UI language as a hint
     (`expected_language`) rather than always defaulting to one language regardless
@@ -149,7 +149,7 @@ def get_stt_service() -> ISpeechToTextService:
 
     if settings.STT_PROVIDER == "openai_whisper":
         if not settings.OPENAI_API_KEY:
-            logger.warning("No OpenAI API key — falling back to MockSTT")
+            logger.warning("No OpenAI API key - falling back to MockSTT")
             return MockSTT()
         return OpenAIWhisperSTT(api_key=settings.OPENAI_API_KEY, model=settings.OPENAI_STT_MODEL)
     elif settings.STT_PROVIDER == "mock":

@@ -1,4 +1,4 @@
-"""Patients API — registration and management."""
+"""Patients API - registration and management."""
 
 import uuid
 import random
@@ -111,7 +111,7 @@ async def list_patients(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """List all active patients — used by Command Center."""
+    """List all active patients - used by Command Center."""
     result = await db.execute(select(Patient).order_by(Patient.arrival_time.desc()))
     patients = result.scalars().all()
     return [

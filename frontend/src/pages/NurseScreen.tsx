@@ -109,7 +109,7 @@ export const NurseScreen: React.FC = () => {
         pain_score: vitals.pain_score ? parseInt(vitals.pain_score) : null,
       })
 
-      // Spec §44 — re-run the deterministic engine on the new observations. This
+      // Spec §44 - re-run the deterministic engine on the new observations. This
       // creates a NEW triage result row (re-triage, spec §20); it never overwrites
       // the previous one, so the full history stays intact.
       await computeTriage(sessionId!)
@@ -331,7 +331,7 @@ export const NurseScreen: React.FC = () => {
                 padding: 14, borderRadius: 10, borderLeft: `4px solid ${msg.speaker === 'patient' ? '#3b82f6' : '#60a5fa'}`
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 4 }}>
-                  <span>{msg.speaker === 'patient' ? 'Patient' : 'AI Nurse'} ({msg.id})</span>
+                  <span>{msg.speaker === 'patient' ? 'Patient' : 'Triage System'} ({msg.id})</span>
                   <span>{new Date(msg.created_at).toLocaleTimeString()}</span>
                 </div>
                 <div style={{ fontWeight: 600 }}>{msg.original_text}</div>
@@ -351,7 +351,7 @@ export const NurseScreen: React.FC = () => {
         <div className="card">
           <h3>Immutable Audit Trail</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: 16 }}>
-            Complete provenance log tracking all AI actions, clinician overrides, and engine rules.
+            Complete provenance log tracking all system actions, clinician overrides, and engine rules.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {auditTrail.map((log: any, idx: number) => (

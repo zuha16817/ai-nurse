@@ -43,14 +43,14 @@ export const TriageResultPanel: React.FC<TriageResultProps> = ({
 
   return (
     <div className="card" style={{ marginTop: 20 }}>
-      {/* Header — always says "AI TRIAGE RECOMMENDATION" not "FINAL TRIAGE" */}
+      {/* Header - always says "AI TRIAGE RECOMMENDATION" not "FINAL TRIAGE" */}
       <div style={{ marginBottom: 16, textAlign: 'center' }}>
         <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-          {clinicianDecision ? 'FINAL CLINICIAN DECISION' : 'AI TRIAGE RECOMMENDATION'}
+          {clinicianDecision ? 'FINAL CLINICIAN DECISION' : 'PRELIMINARY TRIAGE RECOMMENDATION'}
         </div>
         {isOverride && (
           <div style={{ color: '#f59e0b', fontSize: '0.75rem', marginTop: 2 }}>
-            (Override — clinician changed from AI recommendation)
+            (Override - clinician changed from preliminary recommendation)
           </div>
         )}
       </div>
@@ -61,7 +61,7 @@ export const TriageResultPanel: React.FC<TriageResultProps> = ({
           style={{ fontSize: '2rem', padding: '16px 40px', display: 'inline-flex', borderRadius: 16 }}>
           <span>●</span>
           <span style={{ marginLeft: 12 }}>
-            {displayColour} — {COLOUR_LABELS[displayColour]}
+            {displayColour} - {COLOUR_LABELS[displayColour]}
           </span>
         </div>
         <div style={{ marginTop: 8, color: 'var(--text-muted)' }}>
@@ -118,7 +118,7 @@ export const TriageResultPanel: React.FC<TriageResultProps> = ({
               <div style={{ fontWeight: 600 }}>Override Triage Severity</div>
               <select value={newSeverity} onChange={e => setNewSeverity(e.target.value as Severity)}>
                 {(['RED', 'ORANGE', 'YELLOW', 'GREEN', 'BLUE'] as Severity[]).map(s => (
-                  <option key={s} value={s}>{s} — {COLOUR_LABELS[s]}</option>
+                  <option key={s} value={s}>{s} - {COLOUR_LABELS[s]}</option>
                 ))}
               </select>
               <textarea

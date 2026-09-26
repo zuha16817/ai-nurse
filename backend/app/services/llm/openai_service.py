@@ -1,5 +1,5 @@
 """
-LLM Conversation Service — IClinicalConversationService.
+LLM Conversation Service - IClinicalConversationService.
 
 GPT-4o is used ONLY for:
   1. Understanding patient language
@@ -7,9 +7,9 @@ GPT-4o is used ONLY for:
   3. Generating the next conversational question
 
 GPT-4o does NOT:
-  - Decide triage acuity
-  - Hallucinate clinical facts (all facts must cite a message ID)
-  - Accept or reject patient urgency based on third-party opinions (anchoring guard)
+ - Decide triage acuity
+ - Hallucinate clinical facts (all facts must cite a message ID)
+ - Accept or reject patient urgency based on third-party opinions (anchoring guard)
 """
 
 from __future__ import annotations
@@ -40,10 +40,10 @@ CRITICAL RULES:
 - You MUST use top-level key "facts" containing a list of fact objects. Do NOT use top-level keys like "symptoms".
 - Every extracted fact MUST include the exact message_id it came from.
 - If a fact is NOT explicitly stated by the patient, do NOT include it.
-- Unknown information stays UNKNOWN — never assume absent means negative.
+- Unknown information stays UNKNOWN - never assume absent means negative.
 - Do NOT decide triage urgency. That is done by a separate deterministic system.
 - Do NOT lower urgency assessment because a patient quotes another person's opinion (anchoring bias guard).
-- If the patient says something like "my GP said it's just acidity" but also reports chest pain — extract the chest pain fact. Do not suppress it.
+- If the patient says something like "my GP said it's just acidity" but also reports chest pain - extract the chest pain fact. Do not suppress it.
 - Detect contradictions: if the patient gives conflicting answers for the same field, flag the conflict.
 - You MUST provide a specific clinical follow-up question in "next_question" (e.g. asking location, onset, or severity of reported symptoms).
 
@@ -97,13 +97,13 @@ def _last_assistant_message(conversation_history: List[dict]) -> str:
 # Strict JSON Schema for structured-output-capable providers (OpenAI, Gemini via its
 # OpenAI-compatible endpoint, and others that support `response_format: json_schema`).
 # This is the REAL fix for a provider returning an ad-hoc shape like {"symptoms": [...]}
-# instead of the contract below — schema-mode forces conformance at the API level
+# instead of the contract below - schema-mode forces conformance at the API level
 # rather than relying on prompt wording + post-hoc normalization.
 #
 # `conflicts_detected` and `retrieved_sources` are intentionally excluded: the former
 # is not consumed downstream (contradiction detection runs independently on merged
 # facts), and the latter is populated by the app itself after the call, never by the
-# model — both already have safe Pydantic defaults.
+# model - both already have safe Pydantic defaults.
 EXTRACTION_JSON_SCHEMA = {
     "type": "object",
     "properties": {
@@ -173,7 +173,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
 
         # RAG (spec §28): retrieve curated clinical reference material rather than
         # letting the model substitute its own general knowledge for the approved
-        # protocol. Retrieval failure must never block the conversation — an empty
+        # protocol. Retrieval failure must never block the conversation - an empty
         # result just means no reference context is injected this turn (spec §39).
         retrieved: List[dict] = []
         try:
@@ -183,7 +183,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
                 knowledge_service = get_knowledge_service()
                 retrieved = await knowledge_service.query(last_patient_text, n_results=3)
         except Exception as e:
-            logger.warning("Knowledge retrieval failed — continuing without reference context: %s", e)
+            logger.warning("Knowledge retrieval failed - continuing without reference context: %s", e)
             retrieved = []
 
         messages = [
@@ -216,7 +216,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
 
         # Attempt 1: strict JSON-schema mode. This is the real fix for providers
         # (Gemini's OpenAI-compatible endpoint in particular) that otherwise return
-        # an ad-hoc shape like {"symptoms": [...]} instead of the required contract —
+        # an ad-hoc shape like {"symptoms": [...]} instead of the required contract - 
         # schema mode forces conformance at the API level, not just via prompt wording.
         data = None
         try:
@@ -232,7 +232,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
             )
             data = self._parse_json_content(response.choices[0].message.content)
         except Exception as e:
-            logger.warning("Structured json_schema call failed (%s) — retrying with looser json_object mode", e)
+            logger.warning("Structured json_schema call failed (%s) - retrying with looser json_object mode", e)
 
         # Attempt 2: looser "valid JSON, any shape" mode, for providers that don't
         # support schema-constrained output at all. Normalize whatever comes back.
@@ -248,7 +248,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
                 data = self._parse_json_content(response.choices[0].message.content)
                 data = self._normalize_loose_response(data, current_message_id)
             except Exception as e:
-                logger.warning("json_object fallback also failed (%s) — using MockConversationService", e)
+                logger.warning("json_object fallback also failed (%s) - using MockConversationService", e)
                 mock = MockConversationService()
                 return await mock.extract_and_respond(conversation_history, current_message_id, clinical_state, patient_language)
 
@@ -261,7 +261,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
 
         # Anti-repeat safeguard (spec §8/§39): if the model produced no new facts
         # AND its proposed next_question is (near-)identical to the question it just
-        # asked, do not let the conversation loop forever — hand off to a clinician
+        # asked, do not let the conversation loop forever - hand off to a clinician
         # with whatever has been gathered so far, rather than repeating indefinitely.
         last_ai_question = _last_assistant_message(conversation_history).strip().lower()
         proposed_question = (output.next_question or "").strip().lower()
@@ -273,7 +273,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
             if "STALLED_CONVERSATION" not in output.missing_information:
                 output.missing_information.append("STALLED_CONVERSATION")
 
-        # Attach retrieval provenance AFTER the LLM call — never requested from the
+        # Attach retrieval provenance AFTER the LLM call - never requested from the
         # model itself, so it can't be fabricated (spec §28).
         output.retrieved_sources = [
             {
@@ -289,7 +289,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
 
     @staticmethod
     def _parse_json_content(raw_content: Optional[str]) -> dict:
-        """Strip an occasional markdown code fence and parse JSON. Raises on failure —
+        """Strip an occasional markdown code fence and parse JSON. Raises on failure - 
         callers decide whether that means falling back to a looser mode or Mock."""
         raw = (raw_content or "").strip()
         if raw.startswith("```"):
@@ -307,7 +307,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
         """
         Best-effort normalization for providers that ignored the requested schema
         and returned their own shape (only reached when strict schema mode itself
-        isn't supported at all — see Attempt 1 above). Handles the shapes actually
+        isn't supported at all - see Attempt 1 above). Handles the shapes actually
         observed in practice; anything still unrecognized just yields zero facts
         rather than raising, so the conversation degrades gracefully instead of
         crashing.
@@ -324,7 +324,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
                         "fact_key": str(key).lower().replace(" ", "_"),
                         "fact_value": str(value),
                         "status": "PRESENT",
-                        "confidence": 0.7,  # lower than a schema-conformant extraction — the shape itself was unreliable
+                        "confidence": 0.7,  # lower than a schema-conformant extraction - the shape itself was unreliable
                         "evidence_message_id": current_message_id,
                     })
                 elif isinstance(item, str):
@@ -361,7 +361,7 @@ class OpenAIGPT4oConversationService(IClinicalConversationService):
             missing_information=["LLM_FAILURE_ESCALATE_TO_CLINICIAN"],
             next_question="I'm having trouble understanding. A nurse will assist you shortly.",
             high_acuity_trigger=True,
-            high_acuity_reason="LLM failure — safe escalation to clinician review",
+            high_acuity_reason="LLM failure - safe escalation to clinician review",
             conversation_complete=False,
         )
 
@@ -560,7 +560,7 @@ class MockConversationService(IClinicalConversationService):
         else:
             # Generic response asking for details. If we've already asked this once
             # (i.e. the patient's previous reply also didn't match a known pattern),
-            # do NOT loop forever — accept what we have and hand off to a clinician
+            # do NOT loop forever - accept what we have and hand off to a clinician
             # rather than repeating the same question indefinitely (spec §39).
             already_asked_generic = any(
                 msg.get("role") == "assistant" and "how long this has been happening" in msg.get("content", "").lower()
@@ -595,7 +595,7 @@ def get_conversation_service() -> IClinicalConversationService:
 
     if settings.LLM_PROVIDER in ("openai_gpt4o", "openai_compatible", "groq", "gemini", "openrouter", "ollama"):
         if not settings.OPENAI_API_KEY and not settings.OPENAI_BASE_URL and settings.LLM_PROVIDER != "ollama":
-            logger.warning("No API key or base URL — using MockConversationService")
+            logger.warning("No API key or base URL - using MockConversationService")
             return MockConversationService()
         return OpenAIGPT4oConversationService(
             api_key=settings.OPENAI_API_KEY,

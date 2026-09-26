@@ -1,5 +1,5 @@
 """
-Triage API — runs the deterministic triage engine and manages human-in-the-loop.
+Triage API - runs the deterministic triage engine and manages human-in-the-loop.
 
 Key principle: The LLM never decides triage. This router calls the pure
 deterministic engine which produces explainable, evidence-backed results.
@@ -68,7 +68,7 @@ async def compute_triage(
                         detail={"error": str(e)})
         raise HTTPException(status_code=500, detail=f"Rules engine error: {e}")
 
-    # Run engine (deterministic — no LLM)
+    # Run engine (deterministic - no LLM)
     engine = get_triage_engine()
     try:
         result = engine.evaluate(assessment, rule_set)
@@ -78,7 +78,7 @@ async def compute_triage(
         # On rules engine failure → safe escalation (never invent a low-acuity result)
         raise HTTPException(
             status_code=500,
-            detail="Triage rules engine failed — escalate to clinician review"
+            detail="Triage rules engine failed - escalate to clinician review"
         )
 
     # Persist result
@@ -124,7 +124,7 @@ async def compute_triage(
         "evaluated_at": result.evaluated_at,
         "explanation": result.explanation,
         "status": "PENDING_REVIEW",
-        "note": "This is an AI TRIAGE RECOMMENDATION — awaiting clinician confirmation.",
+        "note": "This is an AI TRIAGE RECOMMENDATION - awaiting clinician confirmation.",
     }
 
 
@@ -170,7 +170,7 @@ async def override_triage(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(require_role("nurse", "admin")),
 ):
-    """Clinician overrides the AI recommendation — captured in audit trail."""
+    """Clinician overrides the AI recommendation - captured in audit trail."""
     triage = await _get_triage_result(triage_result_id, db)
     reviewer = current_user.get("sub", "unknown_clinician")
     triage.clinician_decision = body.new_severity
@@ -244,7 +244,7 @@ async def triage_history(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """Full triage history for a session — never replaced, always appended."""
+    """Full triage history for a session - never replaced, always appended."""
     result = await db.execute(
         select(TriageResultORM)
         .where(TriageResultORM.session_id == session_id)
@@ -317,7 +317,7 @@ async def _rebuild_assessment(session_id: str, db: AsyncSession) -> ClinicalAsse
     if patient:
         assessment.patient_age = patient.age
         assessment.patient_language = patient.preferred_language or "en"
-        # Unknown stays UNKNOWN — never coerced into a negative finding.
+        # Unknown stays UNKNOWN - never coerced into a negative finding.
         assessment.pregnancy_status = patient.pregnancy_status or "UNKNOWN"
 
     # Merge vitals (OBJECTIVELY_MEASURED)
@@ -367,7 +367,7 @@ async def _rebuild_assessment(session_id: str, db: AsyncSession) -> ClinicalAsse
     # CRITICAL: rules like RULE-RED-003 ("consciousness.avpu equals Unresponsive")
     # read assessment.consciousness, NOT assessment.vital_signs. Applied AFTER fact
     # merging so an OBJECTIVELY_MEASURED nurse assessment always outranks an earlier
-    # PATIENT_REPORTED value for the same field — never the other way around.
+    # PATIENT_REPORTED value for the same field - never the other way around.
     if latest_vitals and (latest_vitals.avpu or latest_vitals.gcs is not None):
         assessment.consciousness = ConsciousnessAssessment(
             avpu=latest_vitals.avpu or assessment.consciousness.avpu,

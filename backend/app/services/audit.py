@@ -1,5 +1,5 @@
 """
-Audit service — immutable, append-only logging of all clinical actions.
+Audit service - immutable, append-only logging of all clinical actions.
 
 Every triage recommendation must answer:
 - What did the patient say?
@@ -69,7 +69,7 @@ class AuditService:
         db.add(entry)
         await db.commit()
 
-        # Deliberately do NOT include `detail` here — it may carry patient statements
+        # Deliberately do NOT include `detail` here - it may carry patient statements
         # or clinical text. The full record belongs only in the audit_logs table
         # (access-restricted, spec §31); ordinary application/stdout logs must stay
         # free of clinical content and are for operational debugging only.

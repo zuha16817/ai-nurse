@@ -92,7 +92,7 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({
         onClick={isRecording ? stopRecording : startRecording}
         disabled={disabled}
         aria-pressed={isRecording}
-        aria-label={isRecording ? 'Stop recording' : 'Start recording — speak your response'}
+        aria-label={isRecording ? 'Stop recording' : 'Start recording - speak your response'}
         style={{
           width: 100, height: 100, borderRadius: '50%',
           fontSize: '2.5rem', display: 'flex', alignItems: 'center',

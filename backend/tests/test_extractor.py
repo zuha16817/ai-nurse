@@ -64,7 +64,7 @@ class TestContradictionDetection:
         assert conflicts2[0].field == "onset"
         assert set(conflicts2[0].values) == {"yesterday", "one hour ago"}
 
-        # Must never silently drop the earlier value — both facts stay in the record.
+        # Must never silently drop the earlier value - both facts stay in the record.
         onset_facts = [f for f in assessment.all_facts if f.fact_key == "onset"]
         assert len(onset_facts) == 2
 
@@ -77,8 +77,8 @@ class TestContradictionDetection:
     def test_inconsistent_llm_phrasing_of_the_same_finding_is_not_a_contradiction(self, extractor, known_messages):
         """
         Regression test: an LLM extracting the same underlying fact across turns may
-        phrase fact_value inconsistently — e.g. "leg cramps" on one turn, "PRESENT"
-        on the next — without the patient having said anything contradictory. This
+        phrase fact_value inconsistently - e.g. "leg cramps" on one turn, "PRESENT"
+        on the next - without the patient having said anything contradictory. This
         must never be flagged as a conflict, or the conversation loops forever
         asking the patient to resolve a "contradiction" that doesn't exist.
         """
@@ -175,7 +175,7 @@ class TestTranslationPropagation:
 class TestLowConfidenceClarification:
     def test_low_confidence_rejection_produces_clarification_marker(self, extractor, known_messages):
         """
-        A fact rejected only for low confidence must not be silently dropped —
+        A fact rejected only for low confidence must not be silently dropped - 
         it should surface as something to ask about again (spec §16/§39), distinct
         from missing-message rejections which are pure hallucinations.
         """
@@ -192,7 +192,7 @@ class TestLowConfidenceClarification:
 
     def test_missing_message_rejection_does_not_produce_clarification_marker(self, extractor, known_messages):
         """A pure hallucination (fabricated message ID) is a rejection, not a
-        'please repeat yourself' clarification — the two must not be conflated."""
+        'please repeat yourself' clarification - the two must not be conflated."""
         assessment = ClinicalAssessment(session_id="S6")
         output = make_output(LLMExtractedFact(
             fact_type="SYMPTOM", fact_key="diabetes", fact_value="PRESENT",

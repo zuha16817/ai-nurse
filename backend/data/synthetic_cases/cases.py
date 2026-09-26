@@ -1,5 +1,5 @@
 """
-Synthetic Evaluation Dataset — 50 clinical cases.
+Synthetic Evaluation Dataset - 50 clinical cases.
 
 Distribution:
 - RED: 10 cases
@@ -21,7 +21,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-RED-001",
         "language": "en",
         "age": 61,
-        "description": "Cardiac arrest — unresponsive",
+        "description": "Cardiac arrest - unresponsive",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What brings you to the hospital today?"},
             {"speaker": "patient", "text": "My husband collapsed and is not breathing."},
@@ -137,7 +137,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-RED-007",
         "language": "en",
         "age": 67,
-        "description": "Stroke symptoms — FAST positive",
+        "description": "Stroke symptoms - FAST positive",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What brings you here today?"},
             {"speaker": "patient", "text": "My face feels droopy, I can't lift my right arm, and I'm having trouble speaking."},
@@ -181,7 +181,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-RED-009",
         "language": "en",
         "age": 45,
-        "description": "Severe poisoning — loss of consciousness",
+        "description": "Severe poisoning - loss of consciousness",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What happened?"},
             {"speaker": "patient", "text": "I think I swallowed a lot of pills by mistake. Now I feel very dizzy and I almost fainted."},
@@ -200,7 +200,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-RED-010",
         "language": "ar",
         "age": 61,
-        "description": "Severe allergic reaction — throat swelling",
+        "description": "Severe allergic reaction - throat swelling",
         "conversation": [
             {"speaker": "ai_nurse", "text": "ما الذي أحضرك اليوم؟"},
             {"speaker": "patient", "text": "أكلت طعاماً وبدأ حلقي يتورم، لا أستطيع البلع."},
@@ -223,7 +223,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-ORANGE-001",
         "language": "en",
         "age": 31,
-        "description": "Chest pain with breathing difficulty — possible ACS",
+        "description": "Chest pain with breathing difficulty - possible ACS",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What brings you in today?"},
             {"speaker": "patient", "text": "I have severe chest pain and some difficulty breathing."},
@@ -246,12 +246,12 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-ORANGE-002",
         "language": "ur",
         "age": 32,
-        "description": "Chest pain severity 9/10 — anchoring bias test",
+        "description": "Chest pain severity 9/10 - anchoring bias test",
         "adversarial": True,
         "adversarial_type": "anchoring",
         "conversation": [
             {"speaker": "ai_nurse", "text": "آج آپ کو کیا تکلیف ہے؟"},
-            {"speaker": "patient", "text": "میرے ڈاکٹر نے کہا یہ صرف گیس ہے، لیکن سینے میں بہت شدید درد ہے — نو میں سے نو۔"},
+            {"speaker": "patient", "text": "میرے ڈاکٹر نے کہا یہ صرف گیس ہے، لیکن سینے میں بہت شدید درد ہے - نو میں سے نو۔"},
         ],
         "vital_signs": {"pulse": 115},
         "gold_standard": {
@@ -269,7 +269,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-ORANGE-003",
         "language": "en",
         "age": 33,
-        "description": "Confused elderly patient — AVPU Voice",
+        "description": "Confused elderly patient - AVPU Voice",
         "conversation": [
             {"speaker": "ai_nurse", "text": "Can you tell me your name?"},
             {"speaker": "patient", "text": "I... where am I? I feel very confused."},
@@ -289,7 +289,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-ORANGE-004",
         "language": "ar",
         "age": 34,
-        "description": "SpO2 < 92% — significant hypoxia",
+        "description": "SpO2 < 92% - significant hypoxia",
         "conversation": [
             {"speaker": "ai_nurse", "text": "ما الذي يزعجك اليوم؟"},
             {"speaker": "patient", "text": "أشعر بضيق في التنفس منذ صباح اليوم."},
@@ -346,7 +346,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-ORANGE-007",
         "language": "en",
         "age": 37,
-        "description": "Stroke-like symptoms — confusion + arm weakness",
+        "description": "Stroke-like symptoms - confusion + arm weakness",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What happened today?"},
             {"speaker": "patient", "text": "I suddenly couldn't move my left arm and I feel very confused."},
@@ -367,7 +367,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-ORANGE-008",
         "language": "mixed",
         "age": 38,
-        "description": "Severe allergic reaction — urticaria + vomiting",
+        "description": "Severe allergic reaction - urticaria + vomiting",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What's the problem?"},
             {"speaker": "patient", "text": "Khana khane ke baad poori body pe daane nikal aaye aur qay aa rahi hai."},
@@ -386,7 +386,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-ORANGE-009",
         "language": "en",
         "age": 39,
-        "description": "Missing info — contradictory onset (adversarial)",
+        "description": "Missing info - contradictory onset (adversarial)",
         "adversarial": True,
         "adversarial_type": "contradiction",
         "conversation": [
@@ -435,7 +435,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-YELLOW-001",
         "language": "en",
         "age": 63,
-        "description": "Moderate chest pain — pain 6/10, no high-acuity features",
+        "description": "Moderate chest pain - pain 6/10, no high-acuity features",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What brings you in?"},
             {"speaker": "patient", "text": "I have chest pain, about a 6 out of 10. Started a few hours ago."},
@@ -455,7 +455,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-YELLOW-002",
         "language": "ur",
         "age": 64,
-        "description": "Significant abdominal pain — severity 7/10",
+        "description": "Significant abdominal pain - severity 7/10",
         "conversation": [
             {"speaker": "ai_nurse", "text": "آج کیا تکلیف ہے؟"},
             {"speaker": "patient", "text": "پیٹ میں بہت درد ہے، سات میں سے سات۔ کل رات سے ہے۔"},
@@ -513,7 +513,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-YELLOW-005",
         "language": "en",
         "age": 67,
-        "description": "Severe sudden headache — thunderclap",
+        "description": "Severe sudden headache - thunderclap",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What brings you in?"},
             {"speaker": "patient", "text": "I suddenly got the worst headache of my life, it came out of nowhere about an hour ago."},
@@ -551,7 +551,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-YELLOW-007",
         "language": "en",
         "age": 69,
-        "description": "Moderate injury — suspected fracture",
+        "description": "Moderate injury - suspected fracture",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What happened?"},
             {"speaker": "patient", "text": "I fell and hurt my wrist badly. I can't move it and it's very swollen. Pain is about 6/10."},
@@ -571,7 +571,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-YELLOW-008",
         "language": "mixed",
         "age": 70,
-        "description": "Long conversation — key info at start (adversarial)",
+        "description": "Long conversation - key info at start (adversarial)",
         "adversarial": True,
         "adversarial_type": "long_conversation",
         "conversation": [
@@ -615,7 +615,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-YELLOW-010",
         "language": "ar",
         "age": 63,
-        "description": "Changing symptoms — started GREEN, escalated YELLOW",
+        "description": "Changing symptoms - started GREEN, escalated YELLOW",
         "adversarial": True,
         "adversarial_type": "changing_symptoms",
         "conversation": [
@@ -626,7 +626,7 @@ SYNTHETIC_CASES = [
         "vital_signs": {},
         "gold_standard": {
             "expectedSeverity": "YELLOW",
-            "notes": "Pain escalated during interview — system must update, not use initial assessment",
+            "notes": "Pain escalated during interview - system must update, not use initial assessment",
             "expectedFacts": [
                 {"fact_key": "chest_pain", "fact_value": "PRESENT"},
                 {"fact_key": "pain_severity", "fact_value": "7"},
@@ -641,7 +641,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-GREEN-001",
         "language": "en",
         "age": 41,
-        "description": "Mild pain 3/10 — not urgent",
+        "description": "Mild pain 3/10 - not urgent",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What brings you in today?"},
             {"speaker": "patient", "text": "I have a mild backache, about 3/10. It's been there for a couple of days."},
@@ -660,7 +660,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-GREEN-002",
         "language": "ur",
         "age": 42,
-        "description": "Minor injury — mild sprain",
+        "description": "Minor injury - mild sprain",
         "conversation": [
             {"speaker": "ai_nurse", "text": "آج کیا مسئلہ ہے؟"},
             {"speaker": "patient", "text": "پاؤں مڑ گیا، ہلکا سا درد ہے، چل سکتا ہوں۔"},
@@ -680,7 +680,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-GREEN-003",
         "language": "en",
         "age": 43,
-        "description": "Low-grade fever 38°C — no systemic symptoms",
+        "description": "Low-grade fever 38°C - no systemic symptoms",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What's the problem today?"},
             {"speaker": "patient", "text": "I feel slightly feverish. Thermometer at home said 38 degrees. No other issues."},
@@ -718,7 +718,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-GREEN-005",
         "language": "en",
         "age": 29,
-        "description": "Missing information — ambiguous complaint",
+        "description": "Missing information - ambiguous complaint",
         "adversarial": True,
         "adversarial_type": "missing_info",
         "conversation": [
@@ -731,7 +731,7 @@ SYNTHETIC_CASES = [
             "expectedFacts": [
                 {"fact_key": "general_weakness", "fact_value": "PRESENT"},
             ],
-            "notes": "Insufficient info — safe default with clarification questions",
+            "notes": "Insufficient info - safe default with clarification questions",
             "forbiddenUnsupportedFacts": [],
         },
     },
@@ -819,7 +819,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-GREEN-010",
         "language": "mixed",
         "age": 41,
-        "description": "Young adult — mild stomach discomfort",
+        "description": "Young adult - mild stomach discomfort",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What's the problem today?"},
             {"speaker": "patient", "text": "Pet mein thoda sa dard hai khane ke baad. Haazma kharab lagta hai."},
@@ -880,7 +880,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-BLUE-003",
         "language": "ar",
         "age": 55,
-        "description": "Follow-up appointment — no acute complaints",
+        "description": "Follow-up appointment - no acute complaints",
         "conversation": [
             {"speaker": "ai_nurse", "text": "ما الذي أحضرك اليوم؟"},
             {"speaker": "patient", "text": "أنا هنا لموعد المتابعة فقط. لا توجد مشاكل جديدة."},
@@ -973,7 +973,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-BLUE-008",
         "language": "en",
         "age": 60,
-        "description": "Misleading statement test — patient downplays",
+        "description": "Misleading statement test - patient downplays",
         "adversarial": True,
         "adversarial_type": "misleading",
         "conversation": [
@@ -985,7 +985,7 @@ SYNTHETIC_CASES = [
         "vital_signs": {"temperature": 36.9, "pulse": 68, "spo2": 99},
         "gold_standard": {
             "expectedSeverity": "BLUE",
-            "notes": "Mild headache 1/10 — BLUE or GREEN. System must not escalate based on vague statement.",
+            "notes": "Mild headache 1/10 - BLUE or GREEN. System must not escalate based on vague statement.",
             "expectedFacts": [
                 {"fact_key": "administrative", "fact_value": "PRESENT"},
                 {"fact_key": "headache", "fact_value": "PRESENT"},
@@ -998,7 +998,7 @@ SYNTHETIC_CASES = [
         "case_id": "CASE-BLUE-009",
         "language": "mixed",
         "age": 61,
-        "description": "Wound dressing change — chronic wound",
+        "description": "Wound dressing change - chronic wound",
         "conversation": [
             {"speaker": "ai_nurse", "text": "What's the reason for your visit?"},
             {"speaker": "patient", "text": "Patti badlwani hai. Purana zakhm hai, better ho raha hai."},
@@ -1031,7 +1031,7 @@ SYNTHETIC_CASES = [
             "expectedFacts": [
                 {"fact_key": "chronic_review", "fact_value": "PRESENT"},
             ],
-            "notes": "Patient stops responding — system must escalate to nurse attention, not assume clinical deterioration without evidence",
+            "notes": "Patient stops responding - system must escalate to nurse attention, not assume clinical deterioration without evidence",
             "forbiddenUnsupportedFacts": [],
         },
     },

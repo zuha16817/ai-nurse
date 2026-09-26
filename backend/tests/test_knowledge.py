@@ -1,8 +1,8 @@
 """
 RAG / Clinical Knowledge Layer tests (spec §28).
 
-Every retrieved passage must carry provenance metadata — a document, version,
-section and publication date — so the LLM's reference material is never
+Every retrieved passage must carry provenance metadata - a document, version,
+section and publication date - so the LLM's reference material is never
 indistinguishable from its own unverified general knowledge.
 """
 

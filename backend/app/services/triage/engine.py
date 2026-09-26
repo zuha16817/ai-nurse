@@ -1,5 +1,5 @@
 """
-Deterministic Triage Engine — ITriageEngine implementation.
+Deterministic Triage Engine - ITriageEngine implementation.
 
 KEY PRINCIPLE (spec §45):
   LLM = Understand + Extract + Converse
@@ -51,7 +51,7 @@ class TriageRuleSet:
         self.description = description
         self.protocol = protocol
         self.ruleset_hash = ruleset_hash
-        # Institutional target times (spec §3) — configurable per rule-set file,
+        # Institutional target times (spec §3) - configurable per rule-set file,
         # falling back to the spec's reference values if the YAML doesn't override them.
         self.target_minutes: Dict[TriageColour, int] = dict(COLOUR_TO_MINUTES)
         for colour_str, minutes in (target_minutes or {}).items():
@@ -149,8 +149,8 @@ def _evaluate_condition(assessment: ClinicalAssessment, condition: dict) -> bool
 
     actual = _resolve_field_smart(assessment, field)
 
-    # If actual is None/UNKNOWN and expected is not null — condition fails
-    # (UNKNOWN is never treated as a negative finding — it's just unknown)
+    # If actual is None/UNKNOWN and expected is not null - condition fails
+    # (UNKNOWN is never treated as a negative finding - it's just unknown)
     if actual is None and expected is not None:
         return False
 
@@ -258,7 +258,7 @@ class TriageEngine:
                 if best_colour is None or COLOUR_TO_LEVEL[colour] < COLOUR_TO_LEVEL[best_colour]:
                     best_colour = colour
 
-                # Optimisation: RED is the highest possible — stop early
+                # Optimisation: RED is the highest possible - stop early
                 if best_colour == TriageColour.RED:
                     break
 
@@ -268,7 +268,7 @@ class TriageEngine:
             triggered_rules.append(
                 TriggeredRule(
                     rule_id="RULE-DEFAULT",
-                    rule_description="Insufficient information — default safe escalation",
+                    rule_description="Insufficient information - default safe escalation",
                     evidence_ids=[],
                     fact_ids=[],
                 )

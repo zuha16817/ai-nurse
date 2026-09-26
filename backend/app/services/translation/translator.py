@@ -1,9 +1,9 @@
 """
-ITranslationService — English normalisation of patient statements.
+ITranslationService - English normalisation of patient statements.
 
 Spec §7/§15: the system must preserve BOTH the original patient statement AND a
 normalized (English) clinical interpretation. The original is never discarded or
-replaced — this service only ever ADDS a translated_text alongside it.
+replaced - this service only ever ADDS a translated_text alongside it.
 
 Failure mode (spec §39): translation must never block the pipeline. On any failure
 the original text is preserved and used as-is.
@@ -23,7 +23,7 @@ class ITranslationService(ABC):
 
 
 class OpenAITranslationService(ITranslationService):
-    """LLM-based translation — used only to normalise text, never to decide acuity."""
+    """LLM-based translation - used only to normalise text, never to decide acuity."""
 
     def __init__(self, api_key: str, model: str = "gpt-4o-mini"):
         import openai
@@ -52,7 +52,7 @@ class OpenAITranslationService(ITranslationService):
             translated = response.choices[0].message.content
             return translated.strip() if translated else text
         except Exception as e:
-            logger.warning("Translation failed (spec §39 translation failure) — preserving original text: %s", e)
+            logger.warning("Translation failed (spec §39 translation failure) - preserving original text: %s", e)
             return text
 
 
@@ -77,7 +77,7 @@ class MockTranslationService(ITranslationService):
         for phrase, english in self.PHRASES.items():
             if phrase.lower() in lowered:
                 return english
-        return f"[untranslated {source_language} text — translation service unavailable]"
+        return f"[untranslated {source_language} text - translation service unavailable]"
 
 
 def get_translation_service() -> ITranslationService:

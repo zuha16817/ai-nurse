@@ -3,7 +3,7 @@ Combine a session's vital-sign entries into one current picture.
 
 A nurse often records observations in separate entries (temperature at 14:05, an AVPU
 check at 14:12). Each entry is a row with only the fields that were actually measured.
-Reading only the newest row would silently drop everything measured earlier — an
+Reading only the newest row would silently drop everything measured earlier - an
 "Unresponsive" reading would vanish the moment someone later saved a temperature.
 
 So for each field we take the most recent value that was actually recorded. A field

@@ -36,10 +36,10 @@ logger = logging.getLogger(__name__)
 CONFIDENCE_THRESHOLD = 0.4  # Reject facts below this confidence
 
 # Multilingual keyword map used to verify that a fact's cited evidence text actually
-# supports the fact (spec §34). Citing a real message ID is not enough on its own —
+# supports the fact (spec §34). Citing a real message ID is not enough on its own - 
 # a hallucinated fact could point at a real message about something unrelated. This is
 # a lightweight, explainable substring check (appropriate for a prototype guard), not a
-# full NLI model — see docs/evaluation_report.md for its measured limitations.
+# full NLI model - see docs/evaluation_report.md for its measured limitations.
 FACT_KEY_KEYWORDS: dict[str, list[str]] = {
     "chest_pain": ["chest pain", "chest", "seene", "sadr", "sadar", "صدر"],
     "chest_discomfort": ["chest", "seene", "sadr", "صدر"],
@@ -78,7 +78,7 @@ def _is_substantive_value(fact_key: str, value: str) -> bool:
     An LLM is not a controlled vocabulary: for a simple "is this symptom present"
     fact it might put "PRESENT" in fact_value on one turn and the symptom's own
     name (e.g. "leg cramps") on another. Comparing those raw strings for equality
-    would flag that formatting inconsistency as a patient contradiction — it isn't
+    would flag that formatting inconsistency as a patient contradiction - it isn't
     one. Only compare fact_value when it actually carries information beyond "yes,
     this is present" (e.g. onset="yesterday" vs onset="one hour ago" IS meaningful).
     """
@@ -88,7 +88,7 @@ def _is_substantive_value(fact_key: str, value: str) -> bool:
     key_words = set(re.split(r"[\s_-]+", fact_key.lower()))
     value_words = set(re.split(r"[\s_-]+", v))
     if value_words and value_words.issubset(key_words):
-        return False  # the value just echoes the key itself — not new information
+        return False  # the value just echoes the key itself - not new information
     return True
 
 
@@ -96,14 +96,14 @@ def _fact_supported_by_text(fact_key: str, fact_value: str, text: str) -> bool:
     """
     Spec §34: FACT -> Supporting Patient Statement -> VALID; without support -> REJECT.
 
-    A fabricated fact citing a REAL-but-unrelated message must still be caught —
+    A fabricated fact citing a REAL-but-unrelated message must still be caught - 
     checking only that the message ID exists (as the previous guard did) is not enough.
     """
     if not text:
         return False
     text_lower = text.lower()
 
-    # Numeric values (pain score, GCS, etc.) — accept if the literal number is present.
+    # Numeric values (pain score, GCS, etc.) - accept if the literal number is present.
     if fact_value and str(fact_value).strip().isdigit() and str(fact_value) in text:
         return True
 
@@ -111,16 +111,16 @@ def _fact_supported_by_text(fact_key: str, fact_value: str, text: str) -> bool:
     if keywords:
         return any(kw.lower() in text_lower for kw in keywords)
 
-    # Unknown fact_key — fall back to checking the key's own words appear in the text.
+    # Unknown fact_key - fall back to checking the key's own words appear in the text.
     # This is what catches an arbitrary invented fact (e.g. "diabetes") citing text
-    # that never mentions it. Split on ANY separator (space, underscore, hyphen) —
+    # that never mentions it. Split on ANY separator (space, underscore, hyphen) - 
     # a schema-conformant LLM is free to return human-readable keys like
     # "abdominal cramp" rather than the "abdominal_cramp" style the keyword
     # dictionary above assumes; splitting on "_" alone would treat that whole
     # phrase as one unmatchable token and wrongly reject a valid fact.
     words = [w for w in re.split(r"[\s_-]+", fact_key) if len(w) >= 4]
     if not words:
-        return True  # nothing meaningful to check against — don't over-reject
+        return True  # nothing meaningful to check against - don't over-reject
     return any(w.lower() in text_lower for w in words)
 
 
@@ -156,7 +156,7 @@ class HallucinationGuard:
             elif fact.confidence < CONFIDENCE_THRESHOLD:
                 rejection_reason = f"Confidence {fact.confidence:.2f} below threshold {CONFIDENCE_THRESHOLD}"
 
-            # Check 3: the cited message text must actually support the fact —
+            # Check 3: the cited message text must actually support the fact - 
             # citing a real message that has nothing to do with the fact is still a
             # hallucination.
             elif not _fact_supported_by_text(fact.fact_key, fact.fact_value, evidence_text):
@@ -187,10 +187,10 @@ class ClinicalFactExtractor:
     """
     Merges new LLM-extracted facts into the ClinicalAssessment.
 
-    - Runs hallucination guard on every batch.
-    - Detects contradictions.
-    - Updates structured assessment fields.
-    - Tracks all evidence.
+ - Runs hallucination guard on every batch.
+ - Detects contradictions.
+ - Updates structured assessment fields.
+ - Tracks all evidence.
     """
 
     def __init__(self):
@@ -208,7 +208,7 @@ class ClinicalFactExtractor:
         """
         Merge extracted facts into the assessment, after the hallucination check.
 
-        Returns (assessment, rejected_facts, new_conflicts_this_turn) — callers must not
+        Returns (assessment, rejected_facts, new_conflicts_this_turn) - callers must not
         silently drop rejected_facts/new_conflicts: spec §34 requires rejections to be
         auditable, and §17 requires conflicts to trigger a clarification question rather
         than being resolved silently.
@@ -244,7 +244,7 @@ class ClinicalFactExtractor:
             )
             new_facts.append(fact)
 
-        # 3. Contradiction detection — never silently pick one value (spec §17)
+        # 3. Contradiction detection - never silently pick one value (spec §17)
         conflicts = self._detect_contradictions(assessment.all_facts, new_facts)
         for conflict in conflicts:
             assessment.conflicts.append(conflict)
@@ -264,7 +264,7 @@ class ClinicalFactExtractor:
 
         # Low-confidence rejections must prompt clarification, not silent omission
         # (spec §16/§39 "low extraction confidence"). Never treat a rejected fact
-        # as a negative finding — just mark it as something to ask about again.
+        # as a negative finding - just mark it as something to ask about again.
         for rf in rejected_facts:
             if rf.confidence is not None and rf.confidence < CONFIDENCE_THRESHOLD:
                 marker = f"clarify:{rf.fact_key}"
@@ -303,7 +303,7 @@ class ClinicalFactExtractor:
                 and old_fact.status not in (SymptomStatus.UNKNOWN, SymptomStatus.UNCERTAIN)
             )
             # Beyond that, only compare fact_value when both sides carry actual
-            # distinguishing content (see _is_substantive_value) — otherwise this
+            # distinguishing content (see _is_substantive_value) - otherwise this
             # just flags the LLM's own inconsistent phrasing as a patient contradiction.
             value_conflict = (
                 old_fact.fact_value != new_fact.fact_value

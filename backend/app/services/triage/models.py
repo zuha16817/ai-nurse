@@ -44,7 +44,7 @@ class Evidence(BaseModel):
     message_id: str                          # must resolve to a real ConversationMessage
     speaker: str                             # "patient" | "ai_nurse" | "nurse"
     timestamp_seconds: Optional[float] = None
-    original_text: str                       # original patient statement — never discarded
+    original_text: str                       # original patient statement - never discarded
     translated_text: Optional[str] = None   # English normalisation
 
 
@@ -61,7 +61,7 @@ class ClinicalFact(BaseModel):
     fact_value: str                          # e.g. "PRESENT"
     status: SymptomStatus = SymptomStatus.UNKNOWN
     confidence: Optional[float] = None
-    evidence: Evidence                       # mandatory — no evidence → rejected
+    evidence: Evidence                       # mandatory - no evidence → rejected
     source: str = "PATIENT_REPORTED"        # PATIENT_REPORTED | OBJECTIVELY_MEASURED
     is_contradicted: bool = False
     contradiction_detail: Optional[str] = None
@@ -145,7 +145,7 @@ class ConflictRecord(BaseModel):
 class ClinicalAssessment(BaseModel):
     """
     Progressive clinical state built from the conversation.
-    Unknown values remain UNKNOWN — never guessed.
+    Unknown values remain UNKNOWN - never guessed.
     """
     session_id: str
     patient_age: Optional[int] = None
@@ -182,7 +182,7 @@ class ClinicalAssessment(BaseModel):
 # ── LLM Structured Output Schema ──────────────────────────────────────────────
 
 class LLMExtractedFact(BaseModel):
-    """Schema that GPT-4o must return — validated before use."""
+    """Schema that GPT-4o must return - validated before use."""
     fact_type: str
     fact_key: str
     fact_value: str
@@ -205,7 +205,7 @@ class LLMExtractionOutput(BaseModel):
     high_acuity_trigger: bool = False
     high_acuity_reason: Optional[str] = None
     conversation_complete: bool = False
-    # Populated after the LLM call by the RAG layer (spec §28) — not requested from the
+    # Populated after the LLM call by the RAG layer (spec §28) - not requested from the
     # LLM itself, so retrieval provenance can't be fabricated by the model.
     retrieved_sources: List[Dict[str, Any]] = Field(default_factory=list)
 
@@ -273,7 +273,7 @@ class TriageResult(BaseModel):
     triggered_rules: List[TriggeredRule]
     rules_version: str
     protocol: str = "AI_NURSE_SYNTHETIC_PROTOTYPE"
-    ruleset_hash: str = ""                  # SHA-256 of the rules YAML — proves which exact
+    ruleset_hash: str = ""                  # SHA-256 of the rules YAML - proves which exact
                                              # rule content produced this result (spec §27)
     evaluated_at: str = ""                  # ISO-8601 timestamp, set by the engine
     is_high_acuity_interrupted: bool = False

@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite+aiosqlite:///./ai_nurse.db"
 
-    # AI Providers — swappable via env
+    # AI Providers - swappable via env
     STT_PROVIDER: str = "openai_whisper"          # openai_whisper | azure_speech | mock
     LLM_PROVIDER: str = "openai_gpt4o"             # openai_gpt4o | azure_openai | mock
     TRANSLATION_PROVIDER: str = "openai"           # openai | deepl | mock

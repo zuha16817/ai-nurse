@@ -1,4 +1,4 @@
-"""Auth API — login and token generation."""
+"""Auth API - login and token generation."""
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm

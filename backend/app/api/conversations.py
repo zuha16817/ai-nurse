@@ -1,5 +1,5 @@
 """
-Conversations API — the core clinical interview pipeline.
+Conversations API - the core clinical interview pipeline.
 
 Flow per message:
 1. Accept audio (multipart) or text
@@ -51,11 +51,11 @@ MAX_AUDIO_BYTES = 15 * 1024 * 1024  # 15 MB
 ALLOWED_AUDIO_EXTENSIONS = {".webm", ".wav", ".mp3", ".m4a", ".ogg", ".mp4"}
 
 # Clarification questions asked when a fact was rejected only for low confidence, or
-# when the patient has given conflicting answers — never silently resolved (spec §16/§17).
+# when the patient has given conflicting answers - never silently resolved (spec §16/§17).
 CLARIFICATION_QUESTIONS = {
-    "en": "I want to make sure I understood correctly — could you repeat or clarify what you said about {topic}?",
-    "ur": "میں واضح کرنا چاہتا ہوں — کیا آپ {topic} کے بارے میں دوبارہ بتا سکتے ہیں؟",
-    "ar": "أريد التأكد من فهمي بشكل صحيح — هل يمكنك توضيح ما قلته عن {topic}؟",
+    "en": "I want to make sure I understood correctly - could you repeat or clarify what you said about {topic}?",
+    "ur": "میں واضح کرنا چاہتا ہوں - کیا آپ {topic} کے بارے میں دوبارہ بتا سکتے ہیں؟",
+    "ar": "أريد التأكد من فهمي بشكل صحيح - هل يمكنك توضيح ما قلته عن {topic}؟",
 }
 
 CONFLICT_QUESTIONS = {
@@ -90,7 +90,7 @@ class VitalSignsRequest(BaseModel):
     @field_validator("avpu", mode="before")
     @classmethod
     def _valid_avpu(cls, v):
-        # Empty means "not assessed" — stored as unknown, never as a default level.
+        # Empty means "not assessed" - stored as unknown, never as a default level.
         if v is None or (isinstance(v, str) and not v.strip()):
             return None
         canonical = {"alert": "Alert", "voice": "Voice", "pain": "Pain", "unresponsive": "Unresponsive"}
@@ -111,7 +111,7 @@ async def send_text_message(
     # Detect language if not provided
     lang = body.language or _detect_language(body.text)
 
-    # Normalized English interpretation — the original is NEVER discarded or replaced
+    # Normalized English interpretation - the original is NEVER discarded or replaced
     # (spec §7/§15); this only adds a parallel translated_text field.
     translator = get_translation_service()
     translated = await translator.translate_to_english(body.text, lang)
@@ -138,7 +138,7 @@ async def send_audio_message(
     language: Optional[str] = Form(None),
     db: AsyncSession = Depends(get_db),
 ):
-    """Process a voice message — STT → extract → respond."""
+    """Process a voice message - STT → extract → respond."""
     session = await _get_session(session_id, db)
 
     audio_bytes = await audio.read()
@@ -194,7 +194,7 @@ async def enter_vital_signs(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """Nurse enters objective vital signs — clearly differentiated from patient-reported."""
+    """Nurse enters objective vital signs - clearly differentiated from patient-reported."""
     session = await _get_session(body.session_id, db)
 
     vitals = VitalSignsORM(
@@ -227,14 +227,14 @@ async def report_inactivity(
 ):
     """
     Failure mode (spec §39): patient stops responding mid-interview.
-    The client calls this after a period of no reply — it never invents a low-acuity
+    The client calls this after a period of no reply - it never invents a low-acuity
     result, it just flags the session for clinician attention.
     """
     session = await _get_session(session_id, db)
     await audit.log(db, AuditAction.PATIENT_INACTIVE, session_id=session.id,
                     detail={"reason": "No patient response within client-side inactivity window"})
     return {
-        "message": "Inactivity recorded — a nurse has been notified to check on this patient.",
+        "message": "Inactivity recorded - a nurse has been notified to check on this patient.",
     }
 
 
@@ -425,7 +425,7 @@ async def _process_message(
             )
             db.add(orm_fact)
 
-    # Persist + audit rejected facts (spec §34) — never silently discarded.
+    # Persist + audit rejected facts (spec §34) - never silently discarded.
     for rf in rejected_facts:
         orm_rejected = ClinicalFactORM(
             session_id=session.id,
@@ -503,7 +503,7 @@ async def _process_message(
         next_q = extraction.next_question
 
     # A detected contradiction or a low-confidence rejection must be asked about
-    # explicitly — never silently resolved or dropped (spec §16/§17/§39).
+    # explicitly - never silently resolved or dropped (spec §16/§17/§39).
     if new_conflicts:
         topic = new_conflicts[0].field.replace("_", " ")
         values = " / ".join(new_conflicts[0].values)

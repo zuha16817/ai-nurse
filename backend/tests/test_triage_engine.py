@@ -90,7 +90,7 @@ class TestEscalationPrinciple:
     """Higher-acuity rules cannot be overridden by lower-acuity findings."""
 
     def test_red_beats_orange(self, engine, rules):
-        # Patient has both RED and ORANGE features — must be RED
+        # Patient has both RED and ORANGE features - must be RED
         assessment = make_assessment(
             consciousness=ConsciousnessAssessment(avpu="Unresponsive", status=ClinicalValueStatus.KNOWN),
             chief_complaint=ChiefComplaint(
@@ -380,7 +380,7 @@ class TestContainsOperator:
             pain=PainAssessment(severity=5, present=SymptomStatus.PRESENT, status=ClinicalValueStatus.KNOWN),
         )
         result = engine.evaluate(assessment, rules)
-        # No onset info at all — should not be escalated purely by the new rule.
+        # No onset info at all - should not be escalated purely by the new rule.
         assert result.triage_level >= 3
 
 

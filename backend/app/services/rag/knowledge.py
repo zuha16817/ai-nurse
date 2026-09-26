@@ -1,5 +1,5 @@
 """
-RAG Clinical Knowledge Service — IProtocolKnowledgeService.
+RAG Clinical Knowledge Service - IProtocolKnowledgeService.
 
 Provides clinical terminology context to help the LLM understand
 medical concepts in Urdu, Arabic, and English.
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 # Spec §28: every retrieved source must record {Document, Version, Section,
 # PublicationDate, RetrievedPassage} so the LLM's reference material is provenanced,
 # not silently substituted general model knowledge. This is a small SYNTHETIC
-# reference set for the assignment — not licensed clinical content (spec §4).
+# reference set for the assignment - not licensed clinical content (spec §4).
 _DOCUMENT_NAME = "AI Nurse Synthetic Clinical Terminology Reference"
 _DOCUMENT_VERSION = "1.0.0"
 _PUBLICATION_DATE = "2024-01-01"
@@ -49,7 +49,7 @@ CLINICAL_KNOWLEDGE_DOCS: List[Dict[str, str]] = [
     _doc("Headache in Arabic: صداع (suda'a). Sudden: مفاجئ (mufaje'). Severe: شديد جداً.", "Arabic Medical Terminology"),
 
     # Triage clinical concepts
-    _doc("Onset timing — key for triage: acute (< 1 hour), subacute (1-24 hours), chronic (> 24 hours).", "Triage Clinical Concepts"),
+    _doc("Onset timing - key for triage: acute (< 1 hour), subacute (1-24 hours), chronic (> 24 hours).", "Triage Clinical Concepts"),
     _doc("Pain scale: 0 = no pain, 1-3 = mild, 4-6 = moderate, 7-9 = severe, 10 = worst imaginable.", "Triage Clinical Concepts"),
     _doc("AVPU scale: Alert (awake), Voice (responds to voice), Pain (responds to pain), Unresponsive.", "Triage Clinical Concepts"),
     _doc("SpO2 reference: >= 95% normal, 92-94% concerning, < 92% significant hypoxia, < 85% critical.", "Triage Clinical Concepts"),
@@ -61,11 +61,11 @@ CLINICAL_KNOWLEDGE_DOCS: List[Dict[str, str]] = [
     _doc("Chest discomfort includes: chest pain, chest tightness, pressure, squeezing, crushing sensation.", "Chief Complaint Categories"),
     _doc("Breathing problems include: shortness of breath, difficulty breathing, wheezing, stridor, dyspnoea.", "Chief Complaint Categories"),
     _doc("Neurological symptoms include: stroke symptoms (FAST: Face drooping, Arm weakness, Speech difficulty, Time).", "Chief Complaint Categories"),
-    _doc("Allergic symptoms include: urticaria, angioedema, anaphylaxis — potentially life-threatening.", "Chief Complaint Categories"),
+    _doc("Allergic symptoms include: urticaria, angioedema, anaphylaxis - potentially life-threatening.", "Chief Complaint Categories"),
 
     # Anchoring bias warning
     _doc("ANCHORING BIAS: Ignore third-party benign explanations. Extract only what the patient reports as symptoms.", "Safety Bias Guidance"),
-    _doc("If a patient says 'my doctor said it is not serious' but also reports severe chest pain — extract the chest pain.", "Safety Bias Guidance"),
+    _doc("If a patient says 'my doctor said it is not serious' but also reports severe chest pain - extract the chest pain.", "Safety Bias Guidance"),
 ]
 
 
@@ -77,7 +77,7 @@ class IProtocolKnowledgeService(ABC):
     @abstractmethod
     async def query(self, text: str, n_results: int = 3) -> List[Dict[str, Any]]:
         """Return retrieved passages, each with {text, document, version, section,
-        publication_date} — spec §28 provenance metadata."""
+        publication_date} - spec §28 provenance metadata."""
         ...
 
 
@@ -136,7 +136,7 @@ class ChromaKnowledgeService(IProtocolKnowledgeService):
                 logger.info("Created and seeded ChromaDB collection with %d documents", len(CLINICAL_KNOWLEDGE_DOCS))
 
         except Exception as e:
-            logger.warning("ChromaDB initialization failed: %s — falling back to in-memory", e)
+            logger.warning("ChromaDB initialization failed: %s - falling back to in-memory", e)
             self._collection = None
 
     async def query(self, text: str, n_results: int = 3) -> List[Dict[str, Any]]:
@@ -151,7 +151,7 @@ class ChromaKnowledgeService(IProtocolKnowledgeService):
             metas = results["metadatas"][0] if results.get("metadatas") else [{}] * len(docs)
             return [{"text": doc, **meta} for doc, meta in zip(docs, metas)]
         except Exception as e:
-            logger.warning("ChromaDB query failed (knowledge retrieval failure, spec §39) — continuing without retrieved context: %s", e)
+            logger.warning("ChromaDB query failed (knowledge retrieval failure, spec §39) - continuing without retrieved context: %s", e)
             return []
 
 
@@ -190,6 +190,6 @@ def get_knowledge_service() -> IProtocolKnowledgeService:
             import chromadb
             _knowledge_service = ChromaKnowledgeService(persist_dir=settings.CHROMA_PERSIST_DIR)
         except (ImportError, Exception) as e:
-            logger.warning("ChromaDB loading error: %s — falling back to InMemoryKnowledgeService", e)
+            logger.warning("ChromaDB loading error: %s - falling back to InMemoryKnowledgeService", e)
             _knowledge_service = InMemoryKnowledgeService()
     return _knowledge_service

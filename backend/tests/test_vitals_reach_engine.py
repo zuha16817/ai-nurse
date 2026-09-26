@@ -1,7 +1,7 @@
 """
 Regression test for a critical bug found during manual end-to-end testing:
 nurse-entered objective AVPU/GCS vitals were recorded in the database but never
-actually reached `ClinicalAssessment.consciousness` — only `vital_signs` — so
+actually reached `ClinicalAssessment.consciousness` - only `vital_signs` - so
 discriminators like RULE-RED-003 ("consciousness.avpu equals Unresponsive")
 silently never fired for objectively-measured consciousness readings, only for
 values that happened to come from conversation-extracted facts.
@@ -75,7 +75,7 @@ class TestVitalsReachTheEngine:
     async def test_objective_avpu_overrides_stale_patient_reported_value(self, db_session):
         """
         Objectively-measured consciousness must win over an earlier patient-reported
-        value for the same field — never the other way around.
+        value for the same field - never the other way around.
         """
         patient = Patient(visit_number="P-TEST-3")
         db_session.add(patient)

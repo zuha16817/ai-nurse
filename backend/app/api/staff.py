@@ -92,7 +92,7 @@ async def patient_full_view(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(require_role("nurse", "admin")),
 ):
-    """Full clinical staff view — all facts, vitals, triage, audit trail."""
+    """Full clinical staff view - all facts, vitals, triage, audit trail."""
     from app.models.models import (
         ConversationMessage, ClinicalFact, VitalSigns, AuditLog
     )

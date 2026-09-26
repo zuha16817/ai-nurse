@@ -9,7 +9,7 @@ settings = get_settings()
 engine = create_async_engine(
     settings.DATABASE_URL,
     # Always off, regardless of environment: SQLAlchemy's echo dumps full query
-    # parameters — including patient statements — to stdout. Clinical content must
+    # parameters - including patient statements - to stdout. Clinical content must
     # never land in ordinary application logs (spec §31).
     echo=False,
     future=True,

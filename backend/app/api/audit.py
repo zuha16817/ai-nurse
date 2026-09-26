@@ -17,7 +17,7 @@ async def get_audit_trail(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(require_role("nurse", "admin")),
 ):
-    """Return full audit trail for a session — immutable record."""
+    """Return full audit trail for a session - immutable record."""
     result = await db.execute(
         select(AuditLog)
         .where(AuditLog.session_id == session_id)

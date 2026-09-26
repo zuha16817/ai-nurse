@@ -9,7 +9,7 @@ export const CommandCenter: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [filterSeverity, setFilterSeverity] = useState<string>('ALL')
-  // Spec §44 — highlight patients whose condition has deteriorated since the last poll.
+  // Spec §44 - highlight patients whose condition has deteriorated since the last poll.
   const [deterioratedIds, setDeterioratedIds] = useState<Set<string>>(new Set())
   const previousColours = useRef<Record<string, string>>({})
 
@@ -124,7 +124,7 @@ export const CommandCenter: React.FC = () => {
                   </td>
                   <td style={{ padding: '16px 20px' }}>
                     <span className={`severity-badge severity-${item.colour}`}>
-                      {item.colour} — {item.severity_label}
+                      {item.colour} - {item.severity_label}
                     </span>
                     {item.is_override && (
                       <span style={{ fontSize: '0.75rem', color: 'var(--yellow)', marginLeft: 8 }} title="Clinician Overridden">

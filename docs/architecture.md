@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-The **AI Nurse — Conversational Patient Triage & Severity Assessment System** is a production-grade clinical decision support prototype designed to assist Emergency Department (ED) staff in prioritizing patient urgency.
+The **AI Nurse - Conversational Patient Triage & Severity Assessment System** is a production-grade clinical decision support prototype designed to assist Emergency Department (ED) staff in prioritizing patient urgency.
 
 The core architectural invariant mandated by safety governance (Spec §45) is:
 
@@ -16,7 +16,7 @@ Clinical severity is decided **exclusively by a deterministic, versioned rules e
 
 ```
 +-------------------+
-|    Patient UI     | (Voice / Text — English, Urdu, Arabic)
+|    Patient UI     | (Voice / Text - English, Urdu, Arabic)
 +---------+---------+
           |
           | Speech / Audio
@@ -28,7 +28,7 @@ Clinical severity is decided **exclusively by a deterministic, versioned rules e
           | Verbatim Transcript + Message ID
           v
 +-------------------+
-|  Translation      | -> ITranslationService (English normalisation — original text
+|  Translation      | -> ITranslationService (English normalisation - original text
 |  Service          |    is preserved alongside it, never replaced)
 +---------+---------+
           |
@@ -37,7 +37,7 @@ Clinical severity is decided **exclusively by a deterministic, versioned rules e
 | Curated Knowledge | -> IProtocolKnowledgeService (RAG, Spec §28). Retrieves
 | Retrieval (RAG)   |    provenanced reference passages {document, version, section,
 |                   |    publication_date} and injects them as a clearly-labelled
-|                   |    system message — never presented as patient-reported fact.
+|                   |    system message - never presented as patient-reported fact.
 +---------+---------+
           |
           v
@@ -90,7 +90,7 @@ All external AI dependencies are abstracted behind abstract Python interfaces:
 - `IProtocolKnowledgeService` -> `ChromaKnowledgeService` / `InMemoryKnowledgeService`
 - `IAuditService` -> `AuditService`
 
-AI providers can be replaced via environment variables (`STT_PROVIDER`, `LLM_PROVIDER`, `TRANSLATION_PROVIDER`) without modifying business or clinical triage logic. No route handler calls an external AI API directly — every call goes through a `get_*_service()` factory that reads these settings.
+AI providers can be replaced via environment variables (`STT_PROVIDER`, `LLM_PROVIDER`, `TRANSLATION_PROVIDER`) without modifying business or clinical triage logic. No route handler calls an external AI API directly - every call goes through a `get_*_service()` factory that reads these settings.
 
 ### 2. Evidence Provenance & Traceability (Spec §15, §40)
 Every clinical fact maintains an `evidence` block referencing the exact `message_id` and timestamp of the patient's verbatim statement. The original transcript is never discarded or mutated.

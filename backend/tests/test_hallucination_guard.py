@@ -106,7 +106,7 @@ class TestHallucinationGuard:
         Checking only that the message exists (the old guard's only check) would let
         this through. The guard must also verify the message TEXT supports the fact.
         """
-        # MSG-001 = "I have chest pain." — nothing about diabetes.
+        # MSG-001 = "I have chest pain." - nothing about diabetes.
         diabetes_fact = make_extracted_fact("diabetes", "PRESENT", "MSG-001")
         valid, rejected = guard.validate([diabetes_fact], known_messages, conversation_texts)
         assert len(rejected) == 1

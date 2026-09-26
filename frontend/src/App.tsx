@@ -6,7 +6,7 @@ import { NurseScreen } from './pages/NurseScreen'
 import { CommandCenter } from './pages/CommandCenter'
 import { LoginScreen } from './pages/LoginScreen'
 
-// Clinical staff screens require a logged-in nurse/admin — the backend already
+// Clinical staff screens require a logged-in nurse/admin - the backend already
 // enforces this on every request, but redirecting client-side avoids a confusing
 // "flash of 401s" for anyone who reaches these URLs without signing in first.
 const RequireStaffAuth: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
     <nav style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <a href="/" style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text)', textDecoration: 'none' }}>
-          🏥 AI Nurse System
+          🏥 Clinical Nurse System
         </a>
         <a href="/" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Patient Kiosk</a>
         <a href="/command-center" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Command Center</a>

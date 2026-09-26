@@ -23,7 +23,7 @@ settings = get_settings()
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """
     Simple in-memory sliding-window rate limiter (spec §32). A prototype-scale
-    single-process limiter — a production deployment behind multiple workers would
+    single-process limiter - a production deployment behind multiple workers would
     move this to a shared store (e.g. Redis), but the requirement here is that
     RATE_LIMIT_PER_MINUTE is actually enforced, not just declared in config.
     """
@@ -55,7 +55,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="AI Nurse — Patient Triage System",
+    title="AI Nurse - Patient Triage System",
     description=(
         "Conversational patient triage and severity assessment. "
         "LLM extracts clinical facts; deterministic rules engine decides acuity."
@@ -67,7 +67,7 @@ app = FastAPI(
     openapi_url="/api/openapi.json",
 )
 
-# CORS — in production lock down to your domain
+# CORS - in production lock down to your domain
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,

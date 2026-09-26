@@ -3,13 +3,13 @@ Automated Evaluation Runner.
 
 Runs TWO passes over the 50 synthetic cases, because they test different things:
 
-  PART 1 — Rules-Engine-Only Evaluation
+  PART 1 - Rules-Engine-Only Evaluation
     Gold-standard facts are fed directly into the deterministic triage engine.
     This isolates and validates the engine/rules logic itself, independent of
     extraction quality. It CANNOT tell you anything about how well the system
-    understands a conversation — that is what Part 2 is for.
+    understands a conversation - that is what Part 2 is for.
 
-  PART 2 — End-to-End Pipeline Evaluation
+  PART 2 - End-to-End Pipeline Evaluation
     Each case's actual conversation text is played turn-by-turn through the real
     pipeline: LLM extraction -> hallucination guard -> fact merge -> engine. This
     is what spec §37/§38 actually asks for, and it is what makes Clinical Fact
@@ -18,7 +18,7 @@ Runs TWO passes over the 50 synthetic cases, because they test different things:
     By default Part 2 uses MockConversationService so the numbers are 100%
     reproducible without an API key. Its keyword matching only recognises a
     handful of English/Urdu-transliterated phrases, so accuracy on native
-    Urdu/Arabic-script cases will legitimately be lower here than in Part 1 —
+    Urdu/Arabic-script cases will legitimately be lower here than in Part 1 - 
     that gap is real and expected; it is exactly the gap GPT-4o's language
     understanding is meant to close. Set EVAL_USE_REAL_LLM=1 with a valid
     OPENAI_API_KEY to re-run Part 2 against the real GPT-4o service instead.
@@ -56,13 +56,13 @@ COLOUR_LEVEL = {"RED": 1, "ORANGE": 2, "YELLOW": 3, "GREEN": 4, "BLUE": 5, "UNKN
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PART 1 — Rules-Engine-Only Evaluation (gold facts -> engine)
+# PART 1 - Rules-Engine-Only Evaluation (gold facts -> engine)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def build_assessment_from_case(case: dict) -> ClinicalAssessment:
     """
     Construct a ClinicalAssessment directly from a case's gold-standard facts.
-    This tests the RULES ENGINE ONLY — see module docstring. The full
+    This tests the RULES ENGINE ONLY - see module docstring. The full
     conversation -> extraction -> engine path is exercised in Part 2 below.
     """
     session_id = case["case_id"]
@@ -216,7 +216,7 @@ class EvaluationResult:
 
     @property
     def is_severe_under_triage(self) -> bool:
-        """Downgraded by 2 or more categories — most safety-critical error."""
+        """Downgraded by 2 or more categories - most safety-critical error."""
         return (self.predicted_level - self.expected_level) >= 2
 
     @property
@@ -234,7 +234,7 @@ def run_evaluation() -> List[EvaluationResult]:
     results: List[EvaluationResult] = []
 
     print(f"\n{'='*70}")
-    print(f"  PART 1 — RULES-ENGINE-ONLY EVALUATION (gold facts -> engine)")
+    print(f"  PART 1 - RULES-ENGINE-ONLY EVALUATION (gold facts -> engine)")
     print(f"  Rules version: {rules.version}  |  Ruleset hash: {rules.ruleset_hash[:16]}...")
     print(f"  Total cases: {len(SYNTHETIC_CASES)}")
     print(f"{'='*70}\n")
@@ -312,7 +312,7 @@ def compute_metrics(results: List[EvaluationResult]) -> Dict[str, Any]:
 
 def print_report(results: List[EvaluationResult], metrics: Dict[str, Any]) -> None:
     print(f"\n{'='*70}")
-    print(f"  PART 1 METRICS — RULES-ENGINE-ONLY")
+    print(f"  PART 1 METRICS - RULES-ENGINE-ONLY")
     print(f"{'='*70}")
     print(f"\n  {'Metric':<40} {'Value':>15}")
     print(f"  {'-'*55}")
@@ -357,19 +357,19 @@ def print_report(results: List[EvaluationResult], metrics: Dict[str, Any]) -> No
     # Safety assessment
     print("\n  SAFETY ASSESSMENT (Part 1):")
     if metrics["severe_under_triage_count"] == 0:
-        print("  ✓ PASS — No severe under-triage cases detected")
+        print("  ✓ PASS - No severe under-triage cases detected")
     else:
-        print(f"  ✗ FAIL — {metrics['severe_under_triage_count']} severe under-triage case(s) detected!")
+        print(f"  ✗ FAIL - {metrics['severe_under_triage_count']} severe under-triage case(s) detected!")
 
     if metrics["high_acuity_recall"] >= 0.95:
-        print(f"  ✓ PASS — High-acuity recall {metrics['high_acuity_recall']*100:.1f}% (≥ 95%)")
+        print(f"  ✓ PASS - High-acuity recall {metrics['high_acuity_recall']*100:.1f}% (≥ 95%)")
     else:
-        print(f"  ✗ FAIL — High-acuity recall {metrics['high_acuity_recall']*100:.1f}% (< 95% threshold)")
+        print(f"  ✗ FAIL - High-acuity recall {metrics['high_acuity_recall']*100:.1f}% (< 95% threshold)")
 
     if metrics["under_triage_rate"] <= 0.10:
-        print(f"  ✓ PASS — Under-triage rate {metrics['under_triage_rate']*100:.1f}% (≤ 10%)")
+        print(f"  ✓ PASS - Under-triage rate {metrics['under_triage_rate']*100:.1f}% (≤ 10%)")
     else:
-        print(f"  ✗ WARN — Under-triage rate {metrics['under_triage_rate']*100:.1f}% (> 10% threshold)")
+        print(f"  ✗ WARN - Under-triage rate {metrics['under_triage_rate']*100:.1f}% (> 10% threshold)")
 
     print(f"\n  Note: Part 1 tests the RULES ENGINE only (gold facts fed in directly).")
     print(f"        See PART 2 below for full conversation -> extraction -> engine accuracy,")
@@ -377,7 +377,7 @@ def print_report(results: List[EvaluationResult], metrics: Dict[str, Any]) -> No
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# PART 2 — End-to-End Pipeline Evaluation (conversation -> extraction -> guard -> engine)
+# PART 2 - End-to-End Pipeline Evaluation (conversation -> extraction -> guard -> engine)
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class PipelineCaseResult:
@@ -517,7 +517,7 @@ async def run_pipeline_evaluation(use_real_llm: bool = False) -> List[PipelineCa
         from app.services.llm.openai_service import OpenAIGPT4oConversationService
         settings = get_settings()
         if not settings.OPENAI_API_KEY:
-            print("  EVAL_USE_REAL_LLM=1 but no OPENAI_API_KEY is set — falling back to MockConversationService.\n")
+            print("  EVAL_USE_REAL_LLM=1 but no OPENAI_API_KEY is set - falling back to MockConversationService.\n")
             conv_service = MockConversationService()
         else:
             conv_service = OpenAIGPT4oConversationService(settings.OPENAI_API_KEY, settings.OPENAI_LLM_MODEL)
@@ -525,7 +525,7 @@ async def run_pipeline_evaluation(use_real_llm: bool = False) -> List[PipelineCa
         conv_service = MockConversationService()
 
     print(f"\n{'='*70}")
-    print(f"  PART 2 — END-TO-END PIPELINE EVALUATION")
+    print(f"  PART 2 - END-TO-END PIPELINE EVALUATION")
     print(f"  Conversation service: {conv_service.__class__.__name__}")
     print(f"  Total cases: {len(SYNTHETIC_CASES)}")
     print(f"{'='*70}\n")
@@ -587,7 +587,7 @@ def print_pipeline_report(metrics: Dict[str, Any], used_real_llm: bool) -> None:
     def ms(v): return f"{v:.2f}ms"
 
     print(f"\n{'='*70}")
-    print(f"  PART 2 METRICS — END-TO-END PIPELINE ({'GPT-4o' if used_real_llm else 'Mock service'})")
+    print(f"  PART 2 METRICS - END-TO-END PIPELINE ({'GPT-4o' if used_real_llm else 'Mock service'})")
     print(f"{'='*70}\n")
 
     rows = [
@@ -624,19 +624,19 @@ def print_pipeline_report(metrics: Dict[str, Any], used_real_llm: bool) -> None:
         print("""
   NOTE ON THIS RUN'S NUMBERS (read before quoting them):
   MockConversationService only pattern-matches a handful of English words and
-  Urdu/Arabic ROMANIZED transliterations (e.g. "seene", "bukhar") — it does not
+  Urdu/Arabic ROMANIZED transliterations (e.g. "seene", "bukhar") - it does not
   understand native Urdu/Arabic SCRIPT. Cases written in actual Urdu/Arabic script
   will mostly fail to extract anything here, which is expected and is a Mock
   limitation, not a rules-engine defect (Part 1 already validates the engine
-  itself against clean gold facts). This pass exists to prove the wiring —
-  conversation -> extraction -> guard -> engine — is real and measurable.
+  itself against clean gold facts). This pass exists to prove the wiring - 
+  conversation -> extraction -> guard -> engine - is real and measurable.
 
   For representative multilingual accuracy, rerun with a real OpenAI key:
       EVAL_USE_REAL_LLM=1 OPENAI_API_KEY=sk-... python -m tests.evaluation.run_evaluation
 """)
     print("  NOT MEASURED IN THIS OFFLINE HARNESS (documented here rather than guessed):")
-    print("    - STT Accuracy — requires live audio fixtures + Whisper API access.")
-    print("    - Per-service Cost — requires measured token counts from real API calls;")
+    print(" - STT Accuracy - requires live audio fixtures + Whisper API access.")
+    print(" - Per-service Cost - requires measured token counts from real API calls;")
     print("      docs/evaluation_report.md gives a published-pricing ESTIMATE instead,")
     print("      explicitly labelled as such (not a measurement).")
     print()

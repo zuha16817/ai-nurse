@@ -5,7 +5,7 @@ import { registerPatient, sendTextMessage, sendAudioMessage, computeTriage, repo
 
 const SPEECH_LANG: Record<Language, string> = { en: 'en-US', ur: 'ur-PK', ar: 'ar-SA' }
 
-// Spec §39 — patient stops responding: warn + notify staff after this much silence
+// Spec §39 - patient stops responding: warn + notify staff after this much silence
 // following an AI Nurse question, without ever inventing a low-acuity result.
 const INACTIVITY_TIMEOUT_MS = 60_000
 
@@ -17,7 +17,7 @@ function speak(text: string, language: Language) {
     utterance.lang = SPEECH_LANG[language]
     window.speechSynthesis.speak(utterance)
   } catch {
-    // Voice playback is a convenience feature — never let it break the conversation.
+    // Voice playback is a convenience feature - never let it break the conversation.
   }
 }
 
@@ -69,7 +69,7 @@ export const PatientScreen: React.FC = () => {
       try {
         await reportInactivity(activeSessionId)
       } catch {
-        // Best-effort — the important thing is we don't block or crash the UI.
+        // Best-effort - the important thing is we don't block or crash the UI.
       }
       setError(
         language === 'ur' ? 'ایسا لگتا ہے آپ نے جواب نہیں دیا۔ ایک نرس کو مطلع کر دیا گیا ہے۔'
@@ -100,7 +100,7 @@ export const PatientScreen: React.FC = () => {
       if (voiceEnabled) speak(GREETINGS[language], language)
       resetInactivityTimer(res.data.session_id || res.data.id)
     } catch (e: any) {
-      // Never silently pretend registration succeeded — the patient would believe
+      // Never silently pretend registration succeeded - the patient would believe
       // they were triaged while nothing was recorded.
       setError(
         language === 'ur' ? 'رجسٹریشن ناکام ہو گئی۔ براہ کرم دوبارہ کوشش کریں یا نرس سے مدد لیں۔'
@@ -237,8 +237,8 @@ export const PatientScreen: React.FC = () => {
         <div style={{ maxWidth: 460, width: '100%' }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <div style={{ fontSize: '3rem', marginBottom: 12 }}>🏥</div>
-            <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 8 }}>AI Nurse</h1>
-            <p style={{ color: 'var(--text-muted)' }}>Patient Triage System</p>
+            <h1 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: 8 }}>Nurse Triage</h1>
+            <p style={{ color: 'var(--text-muted)' }}>Clinical Assessment System</p>
           </div>
 
           <div className="card">
@@ -326,7 +326,7 @@ export const PatientScreen: React.FC = () => {
       {/* Header */}
       <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{ fontSize: '1.5rem' }}>🏥</div>
-        <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>AI Nurse</div>
+        <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>Nurse Triage System</div>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
           <button
             style={{ padding: '4px 10px', fontSize: '0.85rem' }}
@@ -357,7 +357,7 @@ export const PatientScreen: React.FC = () => {
       )}
 
       {/* Chat area */}
-      <div role="log" aria-live="polite" aria-label="Conversation with AI Nurse"
+      <div role="log" aria-live="polite" aria-label="Conversation with Nurse Assistant"
         style={{ flex: 1, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 700, width: '100%', margin: '0 auto' }}>
         {messages.map((msg, i) => (
           <div key={i} style={{
@@ -374,7 +374,7 @@ export const PatientScreen: React.FC = () => {
               lineHeight: 1.5,
             }}>
               {msg.speaker === 'ai_nurse' && (
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>AI Nurse</div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: 4 }}>Triage Nurse</div>
               )}
               {msg.text}
             </div>

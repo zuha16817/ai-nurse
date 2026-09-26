@@ -1,4 +1,4 @@
-# AI Nurse — Conversational Patient Triage & Severity Assessment System
+# AI Nurse - Conversational Patient Triage & Severity Assessment System
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-1.0.0-009688.svg)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB.svg)](https://reactjs.org)
@@ -19,14 +19,14 @@ The LLM (swappable: Google Gemini 2.5 Flash / OpenAI GPT-4o / Groq / Ollama) ext
 
 ## Key Features
 
-1. **Multilingual Voice & Text**: Full support for English, Urdu (اردو), and Arabic (عربي) with automatic speech-to-text (Whisper), language detection, voice playback (speech synthesis), and English normalisation of every statement — the original is never discarded.
-2. **Hallucination Guard**: Every extracted clinical fact must (a) cite a real message ID, (b) exceed a confidence threshold, and (c) have its cited text actually support the fact — a fabricated fact citing an unrelated real message is rejected, not just one citing a nonexistent message.
-3. **Deterministic Triage Engine**: Pure rules-based calculation (YAML rules v1.0.0, externally configurable target times). Same facts + same rules version = same severity — every result records a SHA-256 hash of the exact rules content used, so past decisions are provably reproducible.
+1. **Multilingual Voice & Text**: Full support for English, Urdu (اردو), and Arabic (عربي) with automatic speech-to-text (Whisper), language detection, voice playback (speech synthesis), and English normalisation of every statement - the original is never discarded.
+2. **Hallucination Guard**: Every extracted clinical fact must (a) cite a real message ID, (b) exceed a confidence threshold, and (c) have its cited text actually support the fact - a fabricated fact citing an unrelated real message is rejected, not just one citing a nonexistent message.
+3. **Deterministic Triage Engine**: Pure rules-based calculation (YAML rules v1.0.0, externally configurable target times). Same facts + same rules version = same severity - every result records a SHA-256 hash of the exact rules content used, so past decisions are provably reproducible.
 4. **Swappable LLM & AI Providers**: Supports Google Gemini 2.5 Flash, OpenAI GPT-4o, Groq, Ollama, and built-in Mock NLU via `LLM_PROVIDER` environment configuration.
-5. **Human-in-the-Loop**: Clinician review interface with **Confirm**, **Override** (with required reason), **Reassess**, and **Escalate** — all authenticated, role-restricted actions.
+5. **Human-in-the-Loop**: Clinician review interface with **Confirm**, **Override** (with required reason), **Reassess**, and **Escalate** - all authenticated, role-restricted actions.
 6. **Emergency Department Command Center**: Real-time queue view sorted by severity rank and clinical target time, with live deterioration highlighting as new observations change a patient's severity.
 7. **Immutable Audit Trail**: Full provenance answering what the patient said, what rules triggered, what the AI recommended, and what the clinician decided.
-8. **Two-Part Automated Evaluation Suite**: 50 synthetic clinical cases evaluated both against the rules engine directly (isolates engine correctness) and through the full conversation → extraction → guard → engine pipeline — see `docs/evaluation_report.md`.
+8. **Two-Part Automated Evaluation Suite**: 50 synthetic clinical cases evaluated both against the rules engine directly (isolates engine correctness) and through the full conversation → extraction → guard → engine pipeline - see `docs/evaluation_report.md`.
 
 ---
 
@@ -47,7 +47,7 @@ On startup, the system automatically seeds default staff credentials so evaluato
 - Python 3.11+
 - Node.js 20+ (for frontend dev)
 - Docker & Docker Compose (optional for containerized setup)
-- Gemini / OpenAI API Key (optional — mock providers fall back automatically if absent)
+- Gemini / OpenAI API Key (optional - mock providers fall back automatically if absent)
 
 ---
 
@@ -90,7 +90,7 @@ docker compose up --build
 
 ### Running the Automated Evaluation Suite
 
-To run all 50 synthetic test cases and generate the quantitative safety metrics report (both the rules-engine-only pass and the full end-to-end conversation pipeline pass — see `docs/evaluation_report.md` for what each measures):
+To run all 50 synthetic test cases and generate the quantitative safety metrics report (both the rules-engine-only pass and the full end-to-end conversation pipeline pass - see `docs/evaluation_report.md` for what each measures):
 ```bash
 cd backend
 python -m tests.evaluation.run_evaluation
