@@ -35,31 +35,39 @@ async def init_db():
 
 
 async def seed_initial_staff():
-    """Automatically seed default staff credentials if no staff exists (enables repo markers to log in immediately)."""
+    """Automatically seed default staff credentials (enables immediate login as admin / Admin123! or nurse / Nurse123!)."""
     from sqlalchemy import select
     from app.models.models import User, UserRole
     from app.core.security import hash_password
 
     async with AsyncSessionLocal() as session:
-        result = await session.execute(
-            select(User).where(User.role.in_([UserRole.ADMIN, UserRole.NURSE]))
-        )
-        if not result.scalars().first():
-            admin_user = User(
+        # Check/create admin user
+        res_admin = await session.execute(select(User).where(User.username == "admin"))
+        admin_user = res_admin.scalar_one_or_none()
+        if not admin_user:
+            session.add(User(
                 username="admin",
                 hashed_password=hash_password("Admin123!"),
                 role=UserRole.ADMIN,
                 full_name="System Administrator",
-            )
-            nurse_user = User(
+            ))
+        else:
+            admin_user.hashed_password = hash_password("Admin123!")
+
+        # Check/create nurse user
+        res_nurse = await session.execute(select(User).where(User.username == "nurse"))
+        nurse_user = res_nurse.scalar_one_or_none()
+        if not nurse_user:
+            session.add(User(
                 username="nurse",
                 hashed_password=hash_password("Nurse123!"),
                 role=UserRole.NURSE,
                 full_name="Triage Nurse",
-            )
-            session.add(admin_user)
-            session.add(nurse_user)
-            await session.commit()
+            ))
+        else:
+            nurse_user.hashed_password = hash_password("Nurse123!")
+
+        await session.commit()
 
 
 async def get_db():
