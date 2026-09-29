@@ -140,6 +140,47 @@ class TestContradictionDetection:
         )
         assert conflicts == []
 
+    def test_underscore_and_onset_phrasing_differences_are_not_contradictions(self, extractor, known_messages):
+        """Regression test for user leader feedback: 'left side' vs 'left_side' and 'few hours ago' vs 'few_hours_ago' or 'started like few hours back' must never trigger a false conflict prompt."""
+        assessment = ClinicalAssessment(session_id="S9")
+        turn1 = make_output(LLMExtractedFact(
+            fact_type="SYMPTOM", fact_key="location", fact_value="left side",
+            status=SymptomStatus.PRESENT, confidence=0.9, evidence_message_id="MSG-001",
+        ))
+        assessment, _, conflicts1 = extractor.process_extraction(
+            assessment, turn1, known_messages, {"MSG-001": "pain on left side", "MSG-002": "left_side"}
+        )
+        assert conflicts1 == []
+
+        turn2 = make_output(LLMExtractedFact(
+            fact_type="SYMPTOM", fact_key="location", fact_value="left_side",
+            status=SymptomStatus.PRESENT, confidence=0.9, evidence_message_id="MSG-002",
+        ))
+        _, _, conflicts2 = extractor.process_extraction(
+            assessment, turn2, known_messages, {"MSG-001": "pain on left side", "MSG-002": "left_side"}
+        )
+        assert conflicts2 == []
+
+        # Onset phrasing: "chances pain started like few hours back" vs "few_hours_ago"
+        assessment2 = ClinicalAssessment(session_id="S10")
+        t1 = make_output(LLMExtractedFact(
+            fact_type="ONSET", fact_key="onset", fact_value="chances pain started like few hours back",
+            status=SymptomStatus.PRESENT, confidence=0.9, evidence_message_id="MSG-001",
+        ))
+        assessment2, _, c1 = extractor.process_extraction(
+            assessment2, t1, known_messages, {"MSG-001": "started like few hours back", "MSG-002": "few_hours_ago"}
+        )
+        assert c1 == []
+
+        t2 = make_output(LLMExtractedFact(
+            fact_type="ONSET", fact_key="onset", fact_value="few_hours_ago",
+            status=SymptomStatus.PRESENT, confidence=0.9, evidence_message_id="MSG-002",
+        ))
+        _, _, c2 = extractor.process_extraction(
+            assessment2, t2, known_messages, {"MSG-001": "started like few hours back", "MSG-002": "few_hours_ago"}
+        )
+        assert c2 == []
+
 
 class TestTranslationPropagation:
     def test_translated_text_attached_to_evidence(self, extractor, known_messages):

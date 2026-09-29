@@ -506,7 +506,8 @@ async def _process_message(
     # explicitly - never silently resolved or dropped (spec §16/§17/§39).
     if new_conflicts:
         topic = new_conflicts[0].field.replace("_", " ")
-        values = " / ".join(new_conflicts[0].values)
+        display_vals = [v.replace("_", " ") for v in new_conflicts[0].values]
+        values = " / ".join(display_vals)
         next_q = CONFLICT_QUESTIONS.get(lang, CONFLICT_QUESTIONS["en"]).format(topic=topic, values=values)
     elif any(m.startswith("clarify:") for m in assessment.missing_information):
         topic = next(m for m in assessment.missing_information if m.startswith("clarify:")).split(":", 1)[1]

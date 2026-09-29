@@ -183,6 +183,32 @@ class HallucinationGuard:
         return valid, rejected
 
 
+def _canonical_value(val: str) -> str:
+    """Normalize string value for semantic comparison (lowercase, replace underscores/hyphens with space, collapse whitespace)."""
+    v = (val or "").strip().lower()
+    v = re.sub(r'[\s_-]+', ' ', v).strip()
+    return v
+
+
+def _are_substantively_conflicting(val1: str, val2: str) -> bool:
+    """Check if two values carry genuinely conflicting semantic meaning (e.g. left vs right)."""
+    c1 = _canonical_value(val1)
+    c2 = _canonical_value(val2)
+    if c1 == c2:
+        return False
+
+    # Extract substantive words (ignoring common filler words or formatting tokens)
+    stop_words = {"ago", "back", "like", "a", "an", "the", "side", "pain", "started", "chances", "felt", "it", "is"}
+    words1 = set(re.findall(r'\b\w+\b', c1)) - stop_words
+    words2 = set(re.findall(r'\b\w+\b', c2)) - stop_words
+
+    # If both have meaningful words and one set equals or is a subset of the other (e.g. "few hours" vs "few hours ago"), no conflict!
+    if words1 and words2 and (words1 == words2 or words1.issubset(words2) or words2.issubset(words1)):
+        return False
+
+    return True
+
+
 class ClinicalFactExtractor:
     """
     Merges new LLM-extracted facts into the ClinicalAssessment.
@@ -306,7 +332,7 @@ class ClinicalFactExtractor:
             # distinguishing content (see _is_substantive_value) - otherwise this
             # just flags the LLM's own inconsistent phrasing as a patient contradiction.
             value_conflict = (
-                old_fact.fact_value != new_fact.fact_value
+                _are_substantively_conflicting(old_fact.fact_value, new_fact.fact_value)
                 and _is_substantive_value(key, old_fact.fact_value)
                 and _is_substantive_value(key, new_fact.fact_value)
             )
